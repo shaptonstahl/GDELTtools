@@ -37,9 +37,28 @@ FilterGdeltDataframe <- function(x, filter, allow.wildcards=FALSE, use.regex=FAL
   return(x[rows.to.keep,])
 }
 
+FilterGdeltDataframe2 <- function(x, filter) {
+  # 'or' within values for a field, 'and' across fields
+  #
+  # ex: FilterGdeltDataframe(my.df, list(ActionGeo_ADM1Code=c("NI", "US"), ActionGeo_CountryCode="US"))
+  # This keeps rows with (ActionGeo_ADM1Code=NI AND ActionGeo_CountryCode=US) OR
+  #   (ActionGeo_ADM1Code=US AND ActionGeo_CountryCode=US)
+  
+  
+  
+  filter.results <- laply(1:length(filter), function(fi) {
+    apply(laply(.data=filter[[fi]], .fun=function(v) x[names(filter)[fi]]==v, .drop=FALSE), 2, any)
+  })
+  if(is.array(filter.results)) rows.to.keep <- apply(filter.results, 2, all)
+  else rows.to.keep <- filter.results
+  return(x[rows.to.keep,])
+}
+
+
 # g79 <- GdeltZipToDataframe("1979.zip")
-# test.filter = list(ActionGeo_ADM1Code=c("NI", "US"), ActionGeo_CountryCode="US")
+# test.filter <- list(ActionGeo_ADM1Code=c("NI", "US"), ActionGeo_CountryCode="US")
 # g79.filtered <- FilterGdeltDataframe(g79, test.filter)
+# table(g79.filtered$ActionGeo_ADM1Code)
 
 # g79.filtered <- FilterGdeltDataframe(g79, list(ActionGeo_ADM1Code="US*"), allow.wildcards=TRUE)
 # table(g79.filtered$ActionGeo_ADM1Code)
@@ -148,6 +167,7 @@ GetGdelt <- function(start.date,
   # Ingest and filter local files
   for(this.file in LocalVersusRemote(filelist=source.files, local.folder=local.folder)$local) {
     new.data <- GdeltZipToDataframe(f=paste(local.folder, "/", this.file, sep=""))
+    browser()
     new.data <- FilterGdeltDataframe(x=new.data,
                                      filter=filter,
                                      allow.wildcards=allow.wildcards,
@@ -186,12 +206,14 @@ GetGdelt <- function(start.date,
   return(out)
 }
 
-# gdelt.folder <- "c:/gdeltdata"
+gdelt.folder <- "c:/gdeltdata"
 
-my.data <- GetGdelt(start.date="1979", 
-                    end.date="1980", 
+my.data <- GetGdelt(start.date="1981-01-01", 
+                    end.date="1981-12-01", 
                     filter=list(ActionGeo_ADM1Code=c("NI", "US"), ActionGeo_CountryCode="US"),
                     local.folder=gdelt.folder,
-                    max.local.mb=100)
+                    max.local.mb=100,
+                    historical.url.root="http://dragon/gdelt/backfiles/",
+                    daily.url.root="http://dragon/gdelt/dailyupdates/")
 str(my.data)
 
