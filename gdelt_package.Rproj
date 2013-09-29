@@ -15,4 +15,4 @@ LaTeX: pdfLaTeX
 BuildType: Package
 PackagePath: Rpackage/dev/GdeltTools
 PackageInstallArgs: --no-multiarch
-PackageRoxygenize: rd
+PackageRoxygenize: rd,collate,namespace

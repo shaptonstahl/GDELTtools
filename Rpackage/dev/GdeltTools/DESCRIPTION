@@ -3,11 +3,19 @@ Type: Package
 Title: Download, slice, and normalize GDELT data
 Version: 1.0
 Date: 2013-09-27
-Author: Stephen R. Haptonstahl and Thomas Scherer
+Author: Stephen R. Haptonstahl, Thomas Scherer, Timo Thoms, and John Beieler
 Maintainer: Stephen R. Haptonstahl <srh@haptonstahl.org>
 Description: More about what it does (maybe more than one line)
-License: What Licence is it under ?
-Depends: 
-  Rcpp (>= 0.10.4),
-  plyr
+License: MIT + file LICENSE
+Depends:
+    Rcpp (>= 0.10.4),
+    plyr
 LinkingTo: Rcpp
+Collate:
+    'DownloadGdelt.R'
+    'FileInfo.R'
+    'FileListFromDates.R'
+    'FilterGdeltDataframe.R'
+    'GdeltZipToDataframe.R'
+    'GetGDELT.R'
+    'LocalVersusRemote.R'

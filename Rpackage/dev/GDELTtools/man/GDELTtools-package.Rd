@@ -10,19 +10,23 @@ More about what it does (maybe more than one line)
 }
 \details{
 \tabular{ll}{
-Package: \tab gdelt\cr
+Package: \tab GDELTtools\cr
 Type: \tab Package\cr
 Version: \tab 1.0\cr
 Date: \tab 2013-09-27\cr
-License: \tab What license is it under?\cr
+License: \tab MIT + file LICENSE\cr
 }
 ~~ An overview of how to use the package, including the most important functions ~~
 }
 \author{
-Stephen R. Haptonstahl
-Thomas Scherer
+  \tabular{ll}{
+    Stephen R. Haptonstahl \tab \email{srh@haptonstahl.org}\cr
+    Thomas Scherer \tab \email{tscherer@princeton.edu}\cr
+    Timo Thoms \tab \email{othoms@princeton.edu}\cr
+    John Beieler \tab \email{jub270@psu.edu}\cr
+  }
 
-Maintainer: Stephen R. Haptonstahl <srh@haptonstahl.org>
+Maintainer: Stephen R. Haptonstahl \email{srh@haptonstahl.org}
 }
 \references{
 \url{http://gdelt.utdallas.edu/}

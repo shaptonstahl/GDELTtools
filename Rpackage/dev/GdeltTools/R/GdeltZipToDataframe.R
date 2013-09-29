@@ -1,14 +1,3 @@
-#' Reads a ZIPed GDELT file into a data.frame
-#'
-#' Given a local GDELT .zip file returns a data.frame with all of the data.
-#' 
-#' @param f character, full path and name of zip file
-#' @return data.frame
-#' @references
-#' \url{http://gdelt.utdallas.edu/}
-#' @author Stephen R. Haptonstahl \email{srh@@haptonstahl.org}
-#' @examples
-#' \dontrun{my.df <- GdeltZipToDataframe("c:/gdeltdata/1979.zip")}
 GdeltZipToDataframe <- function(f) {
   gdelt.colClasses<-c(GLOBALEVENTID="integer", SQLDATE="integer", MonthYear="integer", Year="integer", FractionDate="numeric", Actor1Code="character", Actor1Name="character", Actor1CountryCode="character", Actor1KnownGroupCode="character", Actor1EthnicCode="character", Actor1Religion1Code="character", Actor1Religion2Code="character", Actor1Type1Code="character", Actor1Type2Code="character", Actor1Type3Code="character", Actor2Code="character", Actor2Name="character", Actor2CountryCode="character", Actor2KnownGroupCode="character", Actor2EthnicCode="character", Actor2Religion1Code="character", Actor2Religion2Code="character", Actor2Type1Code="character", Actor2Type2Code="character", Actor2Type3Code="character", IsRootEvent="integer", EventCode="character", EventBaseCode="character", EventRootCode="character", QuadClass="integer", GoldsteinScale="numeric", NumMentions="integer", NumSources="integer", NumArticles="integer", AvgTone="numeric", Actor1Geo_Type="integer", Actor1Geo_FullName="character", Actor1Geo_CountryCode="character", Actor1Geo_ADM1Code="character", Actor1Geo_Lat="numeric", Actor1Geo_Long="numeric", Actor1Geo_FeatureID="integer", Actor2Geo_Type="integer", Actor2Geo_FullName="character", Actor2Geo_CountryCode="character", Actor2Geo_ADM1Code="character", Actor2Geo_Lat="numeric", Actor2Geo_Long="numeric", Actor2Geo_FeatureID="integer", ActionGeo_Type="integer", ActionGeo_FullName="character", ActionGeo_CountryCode="character", ActionGeo_ADM1Code="character", ActionGeo_Lat="numeric", ActionGeo_Long="numeric", ActionGeo_FeatureID="integer", DATEADDED="integer")
   out <- read.delim(unz(f, unzip(f, list=TRUE)$Name[1]), header=FALSE, stringsAsFactors=FALSE, colClasses=gdelt.colClasses)
