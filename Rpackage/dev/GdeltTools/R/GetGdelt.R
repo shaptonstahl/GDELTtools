@@ -13,11 +13,18 @@
 #' @param use.regex logical, if TRUE then \code{filter} will be processed as a \code{\link{regular expression}}.
 #' @param historical.url.root character, URL from which historical files will be downloaded.
 #' @param daily.url.root character, URL from which daily files will be downloaded.
-#' @return verbose logical, if TRUE then indications of progress will be displayed.
+#' @param verbose logical, if TRUE then indications of progress will be displayed.
+#' @return data.frame
 #' @export
 #' @details
 #' 
-#' These are some details.
+#' If \code{local.folder} is not specified then downloaded files are stored in
+#' \code{tempdir()}. If a needed file has already been downloaded to \code{local.folder}
+#' then this file is used instead of being downloaded. This can greatly speed up future
+#' 
+#' 
+#' Dates are parsed with \code{dateParse} in the TimeWarp package. 
+#' Years must be given with four digits.
 #' 
 #' @section Filtering Results:
 #' 
@@ -35,12 +42,18 @@
 #'   John Beieler \tab \email{jub270@@psu.edu}\cr
 #' }
 #' @examples
-#' data(iris)   # provides example data
-#' x <- Function(1, 2)     # Does something simple
-#' x                       # Display result
+#' \dontrun{
+#' test.filter <- list(ActionGeo_ADM1Code=c("NI", "US"), ActionGeo_CountryCode="US")
+#' test.results <- GetGDELT(start.date="1979-01-01", end.date="1979-12-31", filter=test.filter)
+#' table(test.results$ActionGeo_ADM1Code)
+#' table(test.results$ActionGeo_CountryCode} 
 #' 
-#' y <- Function(1, 2, 3)  # Does something more complicated
-#' y                       # Display result
+#' # Specify a local folder to store the downloaded files
+#' \dontrun{
+#' test.results <- GetGDELT(start.date="1979-01-01", end.date="1979-12-31", 
+#'                          filter=test.filter,
+#'                          local.folder="c:/gdeltdata",
+#'                          max.local.mb=500)}
 GetGDELT <- function(start.date,
                      end.date=start.date,
                      filter,
@@ -50,7 +63,10 @@ GetGDELT <- function(start.date,
                      use.regex=FALSE,
                      historical.url.root="http://gdelt.utdallas.edu/data/backfiles/",
                      daily.url.root="http://gdelt.utdallas.edu/data/dailyupdates/",
-                     verbose=FALSE) {
+                     verbose=TRUE) {
+  
+  start.date <- strftime(dateParse(start.date), format="%Y-%m-%d")
+  end.date <- strftime(dateParse(end.date), format="%Y-%m-%d")
   
   out.initialized <- FALSE
   
@@ -60,11 +76,14 @@ GetGDELT <- function(start.date,
   
   # Ingest and filter local files
   for(this.file in LocalVersusRemote(filelist=source.files, local.folder=local.folder)$local) {
-    new.data <- GdeltZipToDataframe(f=paste(local.folder, "/", this.file, sep=""))
+    new.data <- GdeltZipToDataframe(f=paste(local.folder, "/", this.file, sep=""),
+                                    daily=grepl("export.CSV", this.file, fixed=TRUE),
+                                    verbose=verbose)
     new.data <- FilterGdeltDataframe(x=new.data,
                                      filter=filter,
                                      allow.wildcards=allow.wildcards,
-                                     use.regex=use.regex)
+                                     use.regex=use.regex,
+                                     verbose=verbose)
     if(out.initialized) {
       out <- rbind(out, new.data)
     } else {
@@ -80,12 +99,15 @@ GetGDELT <- function(start.date,
                                      max.local.mb=max.local.mb,
                                      historical.url.root=historical.url.root,
                                      daily.url.root=daily.url.root,
-                                     verbose=FALSE)
-    new.data <- GdeltZipToDataframe(f=paste(local.folder, "/", this.file, sep=""))
+                                     verbose=verbose)
+    new.data <- GdeltZipToDataframe(f=paste(local.folder, "/", this.file, sep=""),
+                                    daily=grepl("export.CSV", this.file, fixed=TRUE),
+                                    verbose=verbose)
     new.data <- FilterGdeltDataframe(x=new.data,
                                      filter=filter,
                                      allow.wildcards=allow.wildcards,
-                                     use.regex=use.regex)
+                                     use.regex=use.regex,
+                                     verbose=verbose)
     if(out.initialized) {
       out <- rbind(out, new.data)
     } else {

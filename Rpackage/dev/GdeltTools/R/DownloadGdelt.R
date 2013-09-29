@@ -3,7 +3,7 @@ DownloadGdelt <- function(f,
                           max.local.mb,
                           historical.url.root="http://gdelt.utdallas.edu/data/backfiles/",
                           daily.url.root="http://gdelt.utdallas.edu/data/dailyupdates/",
-                          verbose=FALSE) {
+                          verbose=TRUE) {
   # Dowloads a single file, then removes files if necessary to get under max.local.mb
   # Returns TRUE if file downloaded successfully, FALSE otherwise
   # DOES NOT GIVE A WARNING if non-gdelt files are in the local.folder

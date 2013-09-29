@@ -8,9 +8,8 @@ Maintainer: Stephen R. Haptonstahl <srh@haptonstahl.org>
 Description: More about what it does (maybe more than one line)
 License: MIT + file LICENSE
 Depends:
-    Rcpp (>= 0.10.4),
-    plyr
-LinkingTo: Rcpp
+    plyr,
+    TimeWarp
 Collate:
     'DownloadGdelt.R'
     'FileInfo.R'

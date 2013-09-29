@@ -7,7 +7,7 @@
     allow.wildcards = FALSE, use.regex = FALSE,
     historical.url.root = "http://gdelt.utdallas.edu/data/backfiles/",
     daily.url.root = "http://gdelt.utdallas.edu/data/dailyupdates/",
-    verbose = FALSE)
+    verbose = TRUE)
 }
 \arguments{
   \item{start.date}{character, just about any
@@ -36,10 +36,12 @@
 
   \item{daily.url.root}{character, URL from which daily
   files will be downloaded.}
+
+  \item{verbose}{logical, if TRUE then indications of
+  progress will be displayed.}
 }
 \value{
-  verbose logical, if TRUE then indications of progress
-  will be displayed.
+  data.frame
 }
 \description{
   Download the GDELT files necessary for a data set, import
@@ -47,18 +49,31 @@
   data.frame.
 }
 \details{
-  These are some details.
+  If \code{local.folder} is not specified then downloaded
+  files are stored in \code{tempdir()}. If a needed file
+  has already been downloaded to \code{local.folder} then
+  this file is used instead of being downloaded. This can
+  greatly speed up future
+
+  Dates are parsed with \code{dateParse} in the TimeWarp
+  package. Years must be given with four digits.
 }
 \section{Filtering Results}{
   This is how you write the \code{filter}.
 }
 \examples{
-data(iris)   # provides example data
-x <- Function(1, 2)     # Does something simple
-x                       # Display result
+\dontrun{
+test.filter <- list(ActionGeo_ADM1Code=c("NI", "US"), ActionGeo_CountryCode="US")
+test.results <- GetGDELT(start.date="1979-01-01", end.date="1979-12-31", filter=test.filter)
+table(test.results$ActionGeo_ADM1Code)
+table(test.results$ActionGeo_CountryCode}
 
-y <- Function(1, 2, 3)  # Does something more complicated
-y                       # Display result
+# Specify a local folder to store the downloaded files
+\dontrun{
+test.results <- GetGDELT(start.date="1979-01-01", end.date="1979-12-31",
+                         filter=test.filter,
+                         local.folder="c:/gdeltdata",
+                         max.local.mb=500)}
 }
 \author{
   \tabular{ll}{ Stephen R. Haptonstahl \tab

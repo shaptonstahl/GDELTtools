@@ -1,9 +1,14 @@
-FilterGdeltDataframe <- function(x, filter, allow.wildcards=FALSE, use.regex=FALSE) {
+FilterGdeltDataframe <- function(x, 
+                                 filter, 
+                                 allow.wildcards=FALSE, 
+                                 use.regex=FALSE,
+                                 verbose=TRUE) {
   # 'or' within values for a field, 'and' across fields
   #
   # ex: FilterGdeltDataframe(my.df, list(ActionGeo_ADM1Code=c("NI", "US"), ActionGeo_CountryCode="US"))
   # This keeps rows with (ActionGeo_ADM1Code=NI AND ActionGeo_CountryCode=US) OR
   #   (ActionGeo_ADM1Code=US AND ActionGeo_CountryCode=US)
+  if(verbose) cat("Filtering\n\n")
   if(use.regex) {
     filter.results <- laply(1:length(filter), function(fi) {
       field.results <- laply(.data=filter[[fi]], .fun=function(v) {
