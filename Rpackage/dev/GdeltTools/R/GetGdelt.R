@@ -44,8 +44,8 @@
 GetGDELT <- function(start.date,
                      end.date=start.date,
                      filter,
-                     local.folder,
-                     max.local.mb,
+                     local.folder=tempdir(),
+                     max.local.mb=Inf,
                      allow.wildcards=FALSE, 
                      use.regex=FALSE,
                      historical.url.root="http://gdelt.utdallas.edu/data/backfiles/",
@@ -61,9 +61,6 @@ GetGDELT <- function(start.date,
   # Ingest and filter local files
   for(this.file in LocalVersusRemote(filelist=source.files, local.folder=local.folder)$local) {
     new.data <- GdeltZipToDataframe(f=paste(local.folder, "/", this.file, sep=""))
-    
-    browser()
-    
     new.data <- FilterGdeltDataframe(x=new.data,
                                      filter=filter,
                                      allow.wildcards=allow.wildcards,

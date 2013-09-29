@@ -3,8 +3,8 @@
 \title{Download and subset GDELT data}
 \usage{
   GetGDELT(start.date, end.date = start.date, filter,
-    local.folder, max.local.mb, allow.wildcards = FALSE,
-    use.regex = FALSE,
+    local.folder = tempdir(), max.local.mb = Inf,
+    allow.wildcards = FALSE, use.regex = FALSE,
     historical.url.root = "http://gdelt.utdallas.edu/data/backfiles/",
     daily.url.root = "http://gdelt.utdallas.edu/data/dailyupdates/",
     verbose = FALSE)
