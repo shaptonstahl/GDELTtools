@@ -1,11 +1,14 @@
 Package: GDELTtools
 Type: Package
 Title: Download, slice, and normalize GDELT data
-Version: 1.0
-Date: 2013-09-27
+Version: 0.9
+Date: 2013-09-30
 Author: Stephen R. Haptonstahl, Thomas Scherer, Timo Thoms, and John Beieler
 Maintainer: Stephen R. Haptonstahl <srh@haptonstahl.org>
-Description: More about what it does (maybe more than one line)
+Description: The GDELT data set is over 60 GB now and growing 100 MB a month.
+    The number of source articles has increased over time and unevenly across
+    countries. This package makes it easy to download a subset of that data,
+    then normalize that data to facilitate valid timeseries analysis.
 License: MIT + file LICENSE
 Depends:
     plyr,
@@ -16,5 +19,5 @@ Collate:
     'FileListFromDates.R'
     'FilterGdeltDataframe.R'
     'GdeltZipToDataframe.R'
-    'GetGDELT.R'
+    'GetGdelt.R'
     'LocalVersusRemote.R'
