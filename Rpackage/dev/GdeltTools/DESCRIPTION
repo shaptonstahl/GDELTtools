@@ -21,3 +21,4 @@ Collate:
     'GdeltZipToDataframe.R'
     'GetGdelt.R'
     'LocalVersusRemote.R'
+    'NormEventCounts.R'
