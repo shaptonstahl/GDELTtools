@@ -79,11 +79,11 @@ GetGDELT <- function(start.date,
     new.data <- GdeltZipToDataframe(f=paste(local.folder, "/", this.file, sep=""),
                                     daily=grepl("export.CSV", this.file, fixed=TRUE),
                                     verbose=verbose)
-    new.data <- FilterGdeltDataframe(x=new.data,
-                                     filter=filter,
-                                     allow.wildcards=allow.wildcards,
-                                     use.regex=use.regex,
-                                     verbose=verbose)
+    if(!missing(filter)) new.data <- FilterGdeltDataframe(x=new.data,
+                                                          filter=filter,
+                                                          allow.wildcards=allow.wildcards,
+                                                          use.regex=use.regex,
+                                                          verbose=verbose)
     if(out.initialized) {
       out <- rbind(out, new.data)
     } else {
@@ -103,11 +103,11 @@ GetGDELT <- function(start.date,
     new.data <- GdeltZipToDataframe(f=paste(local.folder, "/", this.file, sep=""),
                                     daily=grepl("export.CSV", this.file, fixed=TRUE),
                                     verbose=verbose)
-    new.data <- FilterGdeltDataframe(x=new.data,
-                                     filter=filter,
-                                     allow.wildcards=allow.wildcards,
-                                     use.regex=use.regex,
-                                     verbose=verbose)
+    if(!missing(filter)) new.data <- FilterGdeltDataframe(x=new.data,
+                                                          filter=filter,
+                                                          allow.wildcards=allow.wildcards,
+                                                          use.regex=use.regex,
+                                                          verbose=verbose)
     if(out.initialized) {
       out <- rbind(out, new.data)
     } else {
@@ -117,6 +117,9 @@ GetGDELT <- function(start.date,
   }
   
   # Filter one more time on dates
+  start.date.numeric <- as.numeric(strftime(dateParse(start.date), format="%Y%m%d"))
+  end.date.numeric <- as.numeric(strftime(dateParse(end.date), format="%Y%m%d"))
+  out <- out[out$SQLDATE >= start.date.numeric & out$SQLDATE <= end.date.numeric,]
   
   return(out)
 }

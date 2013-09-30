@@ -36,5 +36,14 @@ FilterGdeltDataframe <- function(x,
   
   if(is.array(filter.results)) rows.to.keep <- apply(filter.results, 2, all)
   else rows.to.keep <- filter.results
-  return(x[rows.to.keep,])
+  
+  out <- x[rows.to.keep,]
+  
+  # remove NA values for filtered fields
+  for(i in 1:length(filter)) {
+    keep.rows <- !is.na(out[,names(filter)[i]])
+    out <- out[keep.rows,]
+  }
+  
+  return(out)
 }
