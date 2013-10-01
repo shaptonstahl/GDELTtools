@@ -2,25 +2,16 @@
 \alias{NormEventCounts}
 \title{Scale event counts}
 \usage{
-  NormEventCounts(data, include.events, condition,
-    unit.analysis, var.name)
+  NormEventCounts(x, unit.analysis, var.name)
 }
 \arguments{
-  \item{data}{data.frame, a GDELT dataframe.}
-
-  \item{include.events}{character, vector with CAMEO event
-  codes to include in the count.}
-
-  \item{condition}{list, any additional conditions for
-  coding the event count, such as, e.g., restricting to
-  particular actor codes. this needs to refer to dataframe
-  declared above.}
+  \item{x}{data.frame, a GDELT data.frame.}
 
   \item{unit.analysis}{character, default is country.day;
   other options: country.day, country.month, country.year,
   day, month, year}
 
-  \item{var.name,}{character, base name for the new count
+  \item{var.name}{character, base name for the new count
   variables}
 }
 \value{
@@ -31,15 +22,15 @@
 }
 \details{
   For \code{unit.analysis}, day and country-day put out a
-  dataset where date is of class \sQuote{date}.
+  data set where date is of class \sQuote{date}.
 }
 \examples{
 \dontrun{
-new.data.frame <- NormEventCounts(data = GDELT.subset.data,
-  include.events = c(141, 145, 140, 143, 142, 144, 1412, 1413, 1411, 1431, 1414),
-  condition = (GDELT.subset.data $ActionGeo_CountryCode == "AF"),
-  unit.analysis = "country.year",
-  var.name = "protest")}
+GDELT.subset.data <- GetGDELT("2012-01-01", "2012-12-31", allow.wildcards=TRUE,
+                              filter=list(ActionGeo_CountryCode=c("AF", "US"), EventCode="14*"))
+GDELT.normed.data <- NormEventCounts(x = GDELT.subset.data,
+                                     unit.analysis="country.year",
+                                     var.name="protest")}
 }
 \author{
   \tabular{ll}{ Timo Thoms \tab

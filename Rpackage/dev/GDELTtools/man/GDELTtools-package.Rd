@@ -14,11 +14,14 @@ that data to facilitate valid timeseries analysis.
 \tabular{ll}{
 Package: \tab GDELTtools\cr
 Type: \tab Package\cr
-Version: \tab 0.9\cr
-Date: \tab 2013-09-30\cr
+Version: \tab 1.0\cr
+Date: \tab 2013-10-01\cr
 License: \tab MIT + file LICENSE\cr
 }
-# ~~ An overview of how to use the package, including the most important functions ~~
+\code{\link{GetGDELT}} is used to download and subset data.
+
+\code{\link{NormEventCounts}} takes the output from \code{GetGDELT} and normalizes the 
+counts appropriately for conducting time series analysis.
 }
 \author{
   \tabular{ll}{
@@ -39,9 +42,3 @@ Maintainer: Stephen R. Haptonstahl \email{srh@haptonstahl.org}
 \keyword{ ts }
 \keyword{ survival }
 \keyword{ spatial }
-\seealso{
-This and that.
-}
-\examples{
-%% ~~ simple examples of the most important functions ~~
-}
