@@ -1,0 +1,51 @@
+GDELTtools: R Package to Download, Subset, and Normalize GDELT Data
+===================================================================
+
+One of the products of last weekend's hackathon is an R package to
+streamline handling GDELT data.  [This package is availble on CRAN](http://cran.r-project.org/web/packages/GDELTtools). It may take a day or so for them to build the Windows and OS X binaries; until then, OS X users can build from [source](http://cran.r-project.org/src/contrib/GDELTtools_1.0.tar.gz) and Windodws users can download the package [here](URL FOR LOCAL VERSION OF WINDOWS ZIP FILE).  You'll want to make sure you have installed the packages `plyr` and `TimeWarp`.
+
+There are two functions made available in the package.  The first is `GetGDELT`.
+
+    gdelt.subset <- GetGDELT(start.date="1979-01-01", end.date="1979-12-31")
+
+This downloads all the data for 1979 and loads it into a `data.frame`.  Note that is will take some time to download the data, but it will only download the data once per R session.  If you want to retain these files across sessions to speed up future subsetting, specify a local folder to store the downloaded zip files:
+
+    gdelt.subset <- GetGDELT(start.date="1979-01-01", end.date="1979-12-31",
+	                         local.folder="c:/gdeltdata")
+
+If you want to restrict this to events with [CAMEO action code 140](http://eventdata.psu.edu/cameo.dir/CAMEO.Manual.1.1b3.pdf), you can specify a filter.
+
+    gdelt.subset <- GetGDELT(start.date="1979-01-01", end.date="1979-12-31",
+	                         filter=list(EventCode="140"))
+
+You can filter on multiple fields and specify multiple values,
+
+    gdelt.subset <- GetGDELT(start.date="1979-01-01", end.date="1979-12-31",
+	                         filter=list(EventCode="140", ActionGeo_CountryCode=c("US", "CH")))
+
+and you can use wilcards or regular expressions with the filter.
+
+    gdelt.subset <- GetGDELT(start.date="1979-01-01", end.date="1979-12-31",
+                             filter=list(EventCode="14*"),
+							 allow.wildcards=TRUE)
+
+Once you have the subset you want, analyze away.  Be careful, though: the number of sources has increased dramatically and unevenly over time, and this increase varies tremendously from country to country, so making simple comparisons could lead to misleading results.  You'll want to normalize the data to correct for this.
+
+The function `NormEventCounts` corrects for this by dividing by the total number of records in GDELT for that country and time period (day, month, or year).  Suppose you are looking at monthly counts of events that have CAMEO codes beginning with 14 for 2007:
+
+    gdelt.subset <- GetGDELT(start.date="2007-01-01", end.date="2007-12-31",
+                             filter=list(EventCode="14*"),
+							 allow.wildcards=TRUE)
+
+You'll want to normalize for both time (monthly) and country, and specify a label ("protest") for the normed count:
+
+    gdelt.normed <- NormEventCounts(gdelt.subset, 
+	                                unit.analysis="country.month",
+                                    var.name="protest")
+
+Now you're ready to visualize or analyze the data.
+
+Thank should go to [John Beieler](http://johnbeieler.org/), [Thomas Scherer](http://www.tlscherer.com/), and [Timo Thoms](http://www.princeton.edu/~othoms/) for helping me write this package in just a few days.
+
+[Stephen Haptonstahl](https://twitter.com/polimath), [Berico Technologies](http://www.bericotechnologies.com/)
+srh@haptonstahl.org
