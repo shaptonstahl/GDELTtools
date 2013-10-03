@@ -18,7 +18,7 @@
 #' \url{http://gdelt.utdallas.edu/}
 #' @author 
 #' \tabular{ll}{
-#'   Timo Thoms \tab \email{othoms@@princeton.edu}\cr
+#'   Oskar N.T. Thoms \tab \email{othoms@@princeton.edu}\cr
 #'   Stephen R. Haptonstahl \tab \email{srh@@haptonstahl.org}\cr
 #' }
 #' @examples

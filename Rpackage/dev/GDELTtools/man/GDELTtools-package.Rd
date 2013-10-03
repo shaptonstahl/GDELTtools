@@ -27,7 +27,7 @@ counts appropriately for conducting time series analysis.
   \tabular{ll}{
     Stephen R. Haptonstahl \tab \email{srh@haptonstahl.org}\cr
     Thomas Scherer \tab \email{tscherer@princeton.edu}\cr
-    Timo Thoms \tab \email{othoms@princeton.edu}\cr
+    Oskar N.T. Thoms \tab \email{othoms@princeton.edu}\cr
     John Beieler \tab \email{jub270@psu.edu}\cr
   }
 
