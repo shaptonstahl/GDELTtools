@@ -1,0 +1,2 @@
+export(GetGDELT)
+export(NormEventCounts)

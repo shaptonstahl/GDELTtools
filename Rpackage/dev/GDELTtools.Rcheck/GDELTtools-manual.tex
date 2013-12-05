@@ -1,0 +1,314 @@
+\nonstopmode{}
+\documentclass[a4paper]{book}
+\usepackage[times,inconsolata,hyper]{Rd}
+\usepackage{makeidx}
+\usepackage[utf8,latin1]{inputenc}
+% \usepackage{graphicx} % @USE GRAPHICX@
+\makeindex{}
+\begin{document}
+\chapter*{}
+\begin{center}
+{\textbf{\huge Package `GDELTtools'}}
+\par\bigskip{\large \today}
+\end{center}
+\begin{description}
+\raggedright{}
+\item[Type]\AsIs{Package}
+\item[Title]\AsIs{Download, slice, and normalize GDELT data}
+\item[Version]\AsIs{1.0.2}
+\item[Date]\AsIs{2013-12-05}
+\item[Author]\AsIs{Stephen R. Haptonstahl, Thomas Scherer, Timo Thoms, and John Beieler}
+\item[Maintainer]\AsIs{Stephen R. Haptonstahl }\email{srh@haptonstahl.org}\AsIs{}
+\item[Description]\AsIs{The GDELT data set is over 60 GB now and growing 100 MB a month.
+The number of source articles has increased over time and unevenly across
+countries. This package makes it easy to download a subset of that data,
+then normalize that data to facilitate valid timeseries analysis.}
+\item[License]\AsIs{MIT + file LICENSE}
+\item[Depends]\AsIs{R (>= 2.10), plyr, TimeWarp}
+\item[Collate]\AsIs{'DownloadGdelt.R' 'FileInfo.R' 'FileListFromDates.R'
+'FilterGdeltDataframe.R' 'GdeltZipToDataframe.R' 'GetGdelt.R'
+'LocalVersusRemote.R' 'NormEventCounts.R'}
+\end{description}
+\Rdcontents{\R{} topics documented:}
+\inputencoding{utf8}
+\HeaderA{GDELTtools}{Download, slice, and normalize GDELT data}{GDELTtools}
+\keyword{ts}{GDELTtools}
+\keyword{survival}{GDELTtools}
+\keyword{spatial}{GDELTtools}
+%
+\begin{Description}\relax
+The GDELT data set is over 60 GB now and growing 100 MB a month. 
+The number of source articles has increased over time and unevenly across countries.
+This package makes it easy to download a subset of that data, then normalize
+that data to facilitate valid timeseries analysis.
+\end{Description}
+%
+\begin{Details}\relax
+
+\Tabular{ll}{
+Package: & GDELTtools\\{}
+Type: & Package\\{}
+Version: & 1.0\\{}
+Date: & 2013-10-01\\{}
+License: & MIT + file LICENSE\\{}
+}
+\code{\LinkA{GetGDELT}{GetGDELT}} is used to download and subset data.
+
+\code{\LinkA{NormEventCounts}{NormEventCounts}} takes the output from \code{GetGDELT} and normalizes the 
+counts appropriately for conducting time series analysis.
+\end{Details}
+%
+\begin{Author}\relax
+
+\Tabular{ll}{
+Stephen R. Haptonstahl & \email{srh@haptonstahl.org}\\{}
+Thomas Scherer & \email{tscherer@princeton.edu}\\{}
+Oskar N.T. Thoms & \email{othoms@princeton.edu}\\{}
+John Beieler & \email{jub270@psu.edu}\\{}
+}
+
+Maintainer: Stephen R. Haptonstahl \email{srh@haptonstahl.org}
+\end{Author}
+%
+\begin{References}\relax
+GDELT: Global Data on Events, Location and Tone,
+1979-2012. Presented at the 2013 meeting of the
+International Studies Association in San Francisco, CA.
+\url{http://gdelt.utdallas.edu/}
+\end{References}
+\inputencoding{utf8}
+\HeaderA{GetGDELT}{Download and subset GDELT data}{GetGDELT}
+%
+\begin{Description}\relax
+Download the GDELT files necessary for a data set, import
+them, filter on various crieteria, and return a
+data.frame.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+  GetGDELT(start.date, end.date = start.date, filter,
+    local.folder = tempdir(), max.local.mb = Inf,
+    allow.wildcards = FALSE, use.regex = FALSE,
+    historical.url.root = "http://gdelt.utdallas.edu/data/backfiles/",
+    daily.url.root = "http://gdelt.utdallas.edu/data/dailyupdates/",
+    verbose = TRUE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{start.date}] character, just about any
+human-readable form of the earliest date to include.
+
+\item[\code{end.date}] character, just about any human-readable
+form of the latest date to include.
+
+\item[\code{filter}] list, named list encoding the values to
+include for specified fields. See Details.
+
+\item[\code{local.folder}] character, if specified, where
+downloaded files will be saved.
+
+\item[\code{max.local.mb}] numeric, the maximum size in MB of
+the downloaded files that will be retained.
+
+\item[\code{allow.wildcards}] logical, must be TRUE to use * in
+\code{filter} to specify 'any character(s)'.
+
+\item[\code{use.regex}] logical, if TRUE then \code{filter} will
+be processed as a \code{\LinkA{regular expression}{regular expression}}.
+
+\item[\code{historical.url.root}] character, URL from which
+historical files will be downloaded.
+
+\item[\code{daily.url.root}] character, URL from which daily
+files will be downloaded.
+
+\item[\code{verbose}] logical, if TRUE then indications of
+progress will be displayed.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+If \code{local.folder} is not specified then downloaded
+files are stored in \code{tempdir()}. If a needed file
+has already been downloaded to \code{local.folder} then
+this file is used instead of being downloaded. This can
+greatly speed up future
+
+Dates are parsed with \code{dateParse} in the TimeWarp
+package. Years must be given with four digits.
+\end{Details}
+%
+\begin{Value}
+data.frame
+\end{Value}
+%
+\begin{Section}{Filtering Results}
+This is how you write the \code{filter}.
+\end{Section}
+%
+\begin{Author}\relax
+
+\Tabular{ll}{ Stephen R. Haptonstahl &
+\email{srh@haptonstahl.org}\\{} Thomas Scherer &
+\email{tscherer@princeton.edu}\\{} John Beieler &
+\email{jub270@psu.edu}\\{} }
+\end{Author}
+%
+\begin{References}\relax
+GDELT: Global Data on Events, Location and Tone,
+1979-2012. Presented at the 2013 meeting of the
+International Studies Association in San Francisco, CA.
+\url{http://gdelt.utdallas.edu/}
+\end{References}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+test.filter <- list(ActionGeo_ADM1Code=c("NI", "US"), ActionGeo_CountryCode="US")
+test.results <- GetGDELT(start.date="1979-01-01", end.date="1979-12-31", filter=test.filter)
+table(test.results$ActionGeo_ADM1Code)
+table(test.results$ActionGeo_CountryCode
+## End(Not run)
+
+# Specify a local folder to store the downloaded files
+## Not run: 
+test.results <- GetGDELT(start.date="1979-01-01", end.date="1979-12-31",
+                         filter=test.filter,
+                         local.folder="c:/gdeltdata",
+                         max.local.mb=500)
+## End(Not run)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{NormEventCounts}{Scale event counts}{NormEventCounts}
+%
+\begin{Description}\relax
+Scale event counts based on the unit of analysis.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+  NormEventCounts(x, unit.analysis, var.name)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] data.frame, a GDELT data.frame.
+
+\item[\code{unit.analysis}] character, default is country.day;
+other options: country.day, country.month, country.year,
+day, month, year
+
+\item[\code{var.name}] character, base name for the new count
+variables
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+For \code{unit.analysis}, day and country-day put out a
+data set where date is of class `date'.
+\end{Details}
+%
+\begin{Value}
+data.frame
+\end{Value}
+%
+\begin{Author}\relax
+
+\Tabular{ll}{ Oskar N.T. Thoms &
+\email{othoms@princeton.edu}\\{} Stephen R. Haptonstahl
+& \email{srh@haptonstahl.org}\\{} }
+\end{Author}
+%
+\begin{References}\relax
+GDELT: Global Data on Events, Location and Tone,
+1979-2012. Presented at the 2013 meeting of the
+International Studies Association in San Francisco, CA.
+\url{http://gdelt.utdallas.edu/}
+\end{References}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+GDELT.subset.data <- GetGDELT("2012-01-01", "2012-12-31", allow.wildcards=TRUE,
+                              filter=list(ActionGeo_CountryCode=c("AF", "US"), EventCode="14*"))
+GDELT.normed.data <- NormEventCounts(x = GDELT.subset.data,
+                                     unit.analysis="country.year",
+                                     var.name="protest")
+## End(Not run)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{NormEventCountsData}{Normalization Factors for GDELT data, 1979-2012}{NormEventCountsData}
+\keyword{datasets}{NormEventCountsData}
+%
+\begin{Description}\relax
+The included datasets provide daily, monthly, and yearly global and country-specific total event counts for normalizing over time event count data, and the dataframe 'countries' provides a complete list of FIPS 10-4 country codes.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+data(NormEventCountsData)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Format}
+The format is:
+\begin{alltt}List of 7
+ $ countries      :'data.frame':	196 obs. of  2 variables:
+  ..$ country.name: chr [1:196] "AFGHANISTAN" "ANGOLA" "ALBANIA" "ANDORRA" ...
+  ..$ fips104     : chr [1:196] "AF" "AO" "AL" "AN" ...
+  ..- attr(*, "na.action")=Class 'omit'  Named int [1:68] 1 4 5 11 12 13 27 30 36 40 ...
+  .. .. ..- attr(*, "names")= chr [1:68] "1" "4" "5" "11" ...
+ $ daily          :'data.frame':	12613 obs. of  2 variables:
+  ..$ day  : int [1:12613] 19790210 19790410 19790610 19790810 19791010 19791210 19800210 19800410 19800610 19800810 ...
+  ..$ total: int [1:12613] 825 1172 1148 1308 1267 1549 799 1629 1512 1747 ...
+ $ daily.country  :'data.frame':	1801796 obs. of  3 variables:
+  ..$ day    : int [1:1801796] 19790105 19790106 19790108 19790108 19790108 19790109 19790111 19790111 19790112 19790113 ...
+  ..$ country: Factor w/ 263 levels "AA","AC","AE",..: 110 103 81 143 216 132 115 190 32 12 ...
+  ..$ total  : int [1:1801796] 59 1 23 7 4 6 7 1 6 6 ...
+ $ monthly        :'data.frame':	415 obs. of  2 variables:
+  ..$ month: int [1:415] 198004 198204 198404 198604 198804 199004 199204 199404 199604 199804 ...
+  ..$ total: int [1:415] 40402 61247 74581 96452 101710 83908 112952 128486 175319 361448 ...
+ $ monthly.country:'data.frame':	90911 obs. of  3 variables:
+  ..$ month  : int [1:90911] 197901 197901 197902 197903 197903 197905 197906 197907 197907 197907 ...
+  ..$ country: Factor w/ 263 levels "AA","AC","AE",..: 89 164 212 131 197 114 26 7 97 170 ...
+  ..$ total  : int [1:90911] 8 157 16 10 2 195 80 92 11 152 ...
+ $ yearly         :'data.frame':	34 obs. of  2 variables:
+  ..$ year : Factor w/ 36 levels "\bsl{}N","1979","1980",..: 23 6 16 17 20 28 32 11 13 18 ...
+  ..$ total: int [1:34] 4540506 848806 1310741 1774666 3652082 3534874 23464598 1183220 1126957 1780524 ...
+ $ yearly.country :'data.frame':	8490 obs. of  3 variables:
+  ..$ year   : int [1:8490] 1979 1982 1984 1985 1987 1989 1990 1993 1995 1995 ...
+  ..$ country: Factor w/ 263 levels "AA","AC","AE",..: 215 51 11 154 124 108 241 68 49 187 ...
+  ..$ total  : int [1:8490] 601 95 3 37 2619 10228 29762 2143 458 21846 ...
+  \end{alltt}
+
+\end{Format}
+%
+\begin{Details}\relax
+The values are the total number of records in the GDELT database for the time period or tim period and country specified
+\end{Details}
+%
+\begin{Source}\relax
+These datasets were coded by John Beieler from the GDELT historical backfiles.
+\end{Source}
+%
+\begin{References}\relax
+GDELT: Global Data on Events, Location and Tone,
+1979-2012. Presented at the 2013 meeting of the
+International Studies Association in San Francisco, CA.
+\url{http://gdelt.utdallas.edu/}
+\end{References}
+%
+\begin{Examples}
+\begin{ExampleCode}
+data(NormEventCountsData)
+str(NormEventCountsData)
+\end{ExampleCode}
+\end{Examples}
+\printindex{}
+\end{document}
