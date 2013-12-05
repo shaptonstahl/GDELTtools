@@ -1,8 +1,8 @@
 Package: GDELTtools
 Type: Package
 Title: Download, slice, and normalize GDELT data
-Version: 1.0
-Date: 2013-10-01
+Version: 1.0.1
+Date: 2013-12-02
 Author: Stephen R. Haptonstahl, Thomas Scherer, Timo Thoms, and John Beieler
 Maintainer: Stephen R. Haptonstahl <srh@haptonstahl.org>
 Description: The GDELT data set is over 60 GB now and growing 100 MB a month.

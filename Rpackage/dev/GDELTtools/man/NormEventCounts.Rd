@@ -33,7 +33,7 @@ GDELT.normed.data <- NormEventCounts(x = GDELT.subset.data,
                                      var.name="protest")}
 }
 \author{
-  \tabular{ll}{ Timo Thoms \tab
+  \tabular{ll}{ Oskar N.T. Thoms \tab
   \email{othoms@princeton.edu}\cr Stephen R. Haptonstahl
   \tab \email{srh@haptonstahl.org}\cr }
 }
