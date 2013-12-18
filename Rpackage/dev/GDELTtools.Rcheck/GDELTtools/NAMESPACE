@@ -1,2 +1,0 @@
-export(GetGDELT)
-export(NormEventCounts)

@@ -1,4 +1,0 @@
-GDELTtools              Download, slice, and normalize GDELT data
-GetGDELT                Download and subset GDELT data
-NormEventCounts         Scale event counts
-NormEventCountsData     Normalization Factors for GDELT data, 1979-2012

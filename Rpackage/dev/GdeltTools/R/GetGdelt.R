@@ -100,6 +100,9 @@ GetGDELT <- function(start.date,
                                      historical.url.root=historical.url.root,
                                      daily.url.root=daily.url.root,
                                      verbose=verbose)
+    if(FALSE == download.result) {
+      stop("Unable to download file ", this.file, ". Please try again. If you get this result again, the file might not be available on the server.")
+    }
     new.data <- GdeltZipToDataframe(f=paste(local.folder, "/", this.file, sep=""),
                                     daily=grepl("export.CSV", this.file, fixed=TRUE),
                                     verbose=verbose)
