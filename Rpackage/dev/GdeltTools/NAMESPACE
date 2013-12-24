@@ -1,2 +1,3 @@
 export(GetGDELT)
+export(IsValidGDELT)
 export(NormEventCounts)

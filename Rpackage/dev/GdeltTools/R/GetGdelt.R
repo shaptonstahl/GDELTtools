@@ -76,6 +76,11 @@ GetGDELT <- function(start.date,
   
   # Ingest and filter local files
   for(this.file in LocalVersusRemote(filelist=source.files, local.folder=local.folder)$local) {
+    if(FALSE == IsValidGDELT(f=this.file, local.folder=local.folder)) {
+      # remove the offending file; it'll be downloaded in the later loop
+      file.remove(paste(local.folder, "/", this.file, sep=""))
+      next
+    }
     new.data <- GdeltZipToDataframe(f=paste(local.folder, "/", this.file, sep=""),
                                     daily=grepl("export.CSV", this.file, fixed=TRUE),
                                     verbose=verbose)
@@ -103,6 +108,19 @@ GetGDELT <- function(start.date,
     if(FALSE == download.result) {
       stop("Unable to download file ", this.file, ". Please try again. If you get this result again, the file might not be available on the server.")
     }
+    if(FALSE == IsValidGDELT(f=this.file, local.folder=local.folder)) {
+      # try again
+      download.result <- DownloadGdelt(f=this.file,
+                                       local.folder=local.folder,
+                                       max.local.mb=max.local.mb,
+                                       historical.url.root=historical.url.root,
+                                       daily.url.root=daily.url.root,
+                                       verbose=verbose)
+      if(FALSE == IsValidGDELT(f=this.file, local.folder=local.folder)) {
+        stop("Unable to verify the integrity of ", this.file)
+      }
+    }
+    
     new.data <- GdeltZipToDataframe(f=paste(local.folder, "/", this.file, sep=""),
                                     daily=grepl("export.CSV", this.file, fixed=TRUE),
                                     verbose=verbose)

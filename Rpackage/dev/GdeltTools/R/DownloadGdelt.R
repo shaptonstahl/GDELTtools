@@ -18,11 +18,9 @@ DownloadGdelt <- function(f,
   if(f %in% historical.names.zips) {
     file.is.historical <- TRUE
     url.root <- historical.url.root
-    md5.url <- "http://gdelt.umn.edu/data/backfiles/backfile.md5"
   } else {
     file.is.historical <- FALSE
     url.root <- daily.url.root
-    md5.url <- "http://gdelt.umn.edu/data/dailyupdates/dailyupdates.md5"
   }
   if(missing(local.folder)) local.folder <- tempdir()
   
@@ -36,13 +34,6 @@ DownloadGdelt <- function(f,
                           quiet=!verbose)
   if(0 != result) return(FALSE)
   options(op)
-  
-  # Check MD5
-  md5.df <- read.delim(md5.url, sep=" ", header=FALSE)
-  this.md5 <- md5.df[ md5.df[,ncol(md5.df)]==f ,1]
-  if(md5sum(paste(local.folder, "/", f, sep="")) != this.md5) {
-    stop("The file ", f, " appears to be corrupt or incomplete (MD5 doesn't match). Please try again.")
-  }
   
   # Clean up if necessary
   if(!missing(max.local.mb)) {

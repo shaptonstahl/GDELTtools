@@ -3,7 +3,8 @@ Type: Package
 Title: Download, slice, and normalize GDELT data
 Version: 1.0.2
 Date: 2013-12-05
-Author: Stephen R. Haptonstahl, Thomas Scherer, Timo Thoms, John Beieler, and Patrick Wheatley
+Author: Stephen R. Haptonstahl, Thomas Scherer, Timo Thoms, John Beieler, and
+    Patrick Wheatley
 Maintainer: Stephen R. Haptonstahl <srh@haptonstahl.org>
 Description: The GDELT data set is over 60 GB now and growing 100 MB a month.
     The number of source articles has increased over time and unevenly across
@@ -13,7 +14,8 @@ License: MIT + file LICENSE
 Depends:
     R (>= 2.10),
     plyr,
-    TimeWarp
+    TimeWarp,
+    tools
 Collate:
     'DownloadGdelt.R'
     'FileInfo.R'
@@ -21,5 +23,6 @@ Collate:
     'FilterGdeltDataframe.R'
     'GdeltZipToDataframe.R'
     'GetGdelt.R'
+    'IsValidGDELT.R'
     'LocalVersusRemote.R'
     'NormEventCounts.R'
