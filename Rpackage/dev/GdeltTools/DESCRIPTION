@@ -22,6 +22,7 @@ Collate:
     'FileListFromDates.R'
     'FilterGdeltDataframe.R'
     'GdeltZipToDataframe.R'
+    'GetAllOfGdelt.R'
     'GetGdelt.R'
     'IsValidGDELT.R'
     'LocalVersusRemote.R'

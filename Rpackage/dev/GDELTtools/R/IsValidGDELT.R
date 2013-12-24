@@ -1,25 +1,8 @@
-#' Verify the integrity of a GDELT data file
-#'
-#' Compares the MD5 hash of a downloaded file to the known hash provided
-#' on the server.
-#' 
-#' @aliases IsValidGDELT
-#' @param f character, file name of GDELT file to be validated.
-#' @param local.folder character, path to the file to be validated.
-#' @return logical, TRUE if the file is intact.
-#' @export
-#' @references
-#' GDELT: Global Data on Events, Location and Tone, 1979-2012.  
-#' Presented at the 2013 meeting of the International Studies Association
-#' in San Francisco, CA.
-#' \url{http://gdelt.utdallas.edu/}
-#' @author 
-#' \tabular{ll}{
-#'   Stephen R. Haptonstahl \tab \email{srh@@haptonstahl.org}\cr
-#' }
-#' @examples
-#' \dontrun{
-#' IsValidGDELT("1979.zip", "c:/gdeltdata")} 
+# Verify the integrity of a GDELT data file
+#
+# Compares the MD5 hash of a downloaded file to the known hash provided
+# on the server.
+# 
 IsValidGDELT <- function(f,
                          local.folder) {
   
