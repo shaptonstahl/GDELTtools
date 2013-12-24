@@ -16,14 +16,3 @@ Depends:
     plyr,
     TimeWarp,
     tools
-Collate:
-    'DownloadGdelt.R'
-    'FileInfo.R'
-    'FileListFromDates.R'
-    'FilterGdeltDataframe.R'
-    'GdeltZipToDataframe.R'
-    'GetAllOfGdelt.R'
-    'GetGdelt.R'
-    'IsValidGDELT.R'
-    'LocalVersusRemote.R'
-    'NormEventCounts.R'

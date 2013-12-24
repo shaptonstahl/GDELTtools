@@ -4,9 +4,10 @@
 #' 
 #' @aliases GetAllOfGDELT
 #' @param local.folder character, path to the file to be validated.
-#' @param historical.url.root character, URL for the folder with older GDELT files
-#' @param daily.url.root character, URL for the folder with daily GDELT files
-#' @return logical, invisible, TRUE if all files were downloaded successfully.
+#' @param historical.url.root character, URL for the folder with older GDELT files.
+#' @param daily.url.root character, URL for the folder with daily GDELT files.
+#' @param force logical, if TRUE then the download is carried out without further prompting the user.
+#' @return logical, TRUE if all files were downloaded successfully.
 #' @export
 #' @references
 #' GDELT: Global Data on Events, Location and Tone, 1979-2012.  
@@ -22,7 +23,24 @@
 #' GetAllOfGDELT("c:/gdeltdata")} 
 GetAllOfGDELT <- function(local.folder,
                           historical.url.root="http://gdelt.umn.edu/data/backfiles/",
-                          daily.url.root="http://gdelt.umn.edu/data/dailyupdates/") {
+                          daily.url.root="http://gdelt.umn.edu/data/dailyupdates/",
+                          force=FALSE) {
+  
+  if(FALSE == force) {
+    # ask the user if they are sure
+    w <- strwrap(paste("The compressed GDELT data set is currently ",
+                       round(GetSizeOfGDELT(), 1),
+                       "GB. It will take a long time to download and requires a lot of room (",
+                       round(GetSizeOfGDELT(), 1),
+                       "GB) where you store it. Please verify that you have sufficient free space on the drive where you intend to store it.",
+                       sep=""))
+    writeLines(w)
+    response <- readline("Are you ready to proceed? (y/n) ")
+    
+    if(FALSE == grepl("[yY]", response)) {
+      return(FALSE)
+    }
+  }
   
   start.date <- strftime(dateParse("1979-01-01"), format="%Y-%m-%d")
   end.date <- strftime(dateShift(Sys.Date(), by="days", k.by=1, direction=-1), format="%Y-%m-%d")
