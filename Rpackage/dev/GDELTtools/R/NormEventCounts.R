@@ -23,11 +23,12 @@
 #' }
 #' @examples
 #' \dontrun{
-#' GDELT.subset.data <- GetGDELT("2012-01-01", "2012-12-31", allow.wildcards=TRUE,
-#'                               filter=list(ActionGeo_CountryCode=c("AF", "US"), EventCode="14*"))
+#' GDELT.subset.data <- GetGDELT("2013-06-01", "2013-06-07", allow.wildcards=TRUE,
+#'   filter=list(ActionGeo_CountryCode=c("AF", "US"), EventCode="14*"),
+#'   local.folder="~/gdeltdata")
 #' GDELT.normed.data <- NormEventCounts(x = GDELT.subset.data, 
-#'                                      unit.analysis="country.year", 
-#'                                      var.name="protest")}
+#'   unit.analysis="day", 
+#'   var.name="protest")}
 NormEventCounts <- function(x, 
                             unit.analysis, 
                             var.name){

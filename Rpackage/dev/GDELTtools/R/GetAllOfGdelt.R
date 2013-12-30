@@ -20,7 +20,7 @@
 #' }
 #' @examples
 #' \dontrun{
-#' GetAllOfGDELT("c:/gdeltdata")} 
+#' GetAllOfGDELT("~/gdeltdata")} 
 GetAllOfGDELT <- function(local.folder,
                           historical.url.root="http://gdelt.umn.edu/data/backfiles/",
                           daily.url.root="http://gdelt.umn.edu/data/dailyupdates/",
@@ -41,6 +41,17 @@ GetAllOfGDELT <- function(local.folder,
       return(FALSE)
     }
   }
+  
+  # Coerce ending slashes as needed
+  StripTrailingSlashes <- function(x) {
+    while( grepl("[/\\\\]$", x) ) x <- substring(x, 1, nchar(x) - 1)
+    return(x)
+  }
+  local.folder <- StripTrailingSlashes(local.folder)
+  historical.url.root <- paste(StripTrailingSlashes(historical.url.root), "/", sep="")
+  daily.url.root <- paste(StripTrailingSlashes(daily.url.root), "/", sep="")
+  # create the local.folder if is doesn't exist
+  dir.create(local.folder, showWarnings=FALSE, recursive = TRUE)
   
   start.date <- strftime(dateParse("1979-01-01"), format="%Y-%m-%d")
   end.date <- strftime(dateShift(Sys.Date(), by="days", k.by=1, direction=-1), format="%Y-%m-%d")

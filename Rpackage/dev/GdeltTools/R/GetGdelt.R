@@ -44,15 +44,16 @@
 #' @examples
 #' \dontrun{
 #' test.filter <- list(ActionGeo_ADM1Code=c("NI", "US"), ActionGeo_CountryCode="US")
-#' test.results <- GetGDELT(start.date="1979-01-01", end.date="1979-12-31", filter=test.filter)
+#' test.results <- GetGDELT(start.date="1979-01-01", end.date="1979-12-31", 
+#'   filter=test.filter)
 #' table(test.results$ActionGeo_ADM1Code)
-#' table(test.results$ActionGeo_CountryCode} 
+#' table(test.results$ActionGeo_CountryCode)}
 #' 
 #' # Specify a local folder to store the downloaded files
 #' \dontrun{
 #' test.results <- GetGDELT(start.date="1979-01-01", end.date="1979-12-31", 
 #'                          filter=test.filter,
-#'                          local.folder="c:/gdeltdata",
+#'                          local.folder="~/gdeltdata",
 #'                          max.local.mb=500)}
 GetGDELT <- function(start.date,
                      end.date=start.date,
@@ -61,9 +62,20 @@ GetGDELT <- function(start.date,
                      max.local.mb=Inf,
                      allow.wildcards=FALSE, 
                      use.regex=FALSE,
-                     historical.url.root="http://gdelt.utdallas.edu/data/backfiles/",
-                     daily.url.root="http://gdelt.utdallas.edu/data/dailyupdates/",
+                     historical.url.root="http://gdelt.umn.edu/data/backfiles/",
+                     daily.url.root="http://gdelt.umn.edu/data/dailyupdates/",
                      verbose=TRUE) {
+  
+  # Coerce ending slashes as needed
+  StripTrailingSlashes <- function(x) {
+    while( grepl("[/\\\\]$", x) ) x <- substring(x, 1, nchar(x) - 1)
+    return(x)
+  }
+  local.folder <- StripTrailingSlashes(local.folder)
+  historical.url.root <- paste(StripTrailingSlashes(historical.url.root), "/", sep="")
+  daily.url.root <- paste(StripTrailingSlashes(daily.url.root), "/", sep="")
+  # create the local.folder if is doesn't exist
+  dir.create(local.folder, showWarnings=FALSE, recursive = TRUE)
   
   start.date <- strftime(dateParse(start.date), format="%Y-%m-%d")
   end.date <- strftime(dateParse(end.date), format="%Y-%m-%d")
@@ -73,6 +85,7 @@ GetGDELT <- function(start.date,
   # Determine file list based on dates
   source.files <- FileListFromDates(startdate=start.date, enddate=end.date)
   source.files <- c(source.files$historic, source.files$daily)
+  
   
   # Ingest and filter local files
   for(this.file in LocalVersusRemote(filelist=source.files, local.folder=local.folder)$local) {
