@@ -20,6 +20,7 @@
 #' \tabular{ll}{
 #'   Oskar N.T. Thoms \tab \email{othoms@@princeton.edu}\cr
 #'   Stephen R. Haptonstahl \tab \email{srh@@haptonstahl.org}\cr
+#'   John Beieler \tab \email{jub270@psu.edu}\cr
 #' }
 #' @examples
 #' \dontrun{
@@ -30,23 +31,36 @@
 #'                                      var.name="protest")}
 NormEventCounts <- function(x, 
                             unit.analysis, 
-                            var.name){
+                            var.name="norming_vars",
+                            local.folder){
   # files with total event counts are included in the package, but these could be stored on a server and downloaded as needed 
   if(missing(x)) stop("Must specify a data.frame")
   if(missing(unit.analysis)) stop("A unit of analysis must be specified")
   if(!(unit.analysis %in% c("country.day", "country.month", "country.year", "day", "month", "year"))) stop("Not a valid unit of analysis. Choose from: country.day, country.month, country.year, day, month, year")
+
+  if(missing(local.folder)) local.folder <- tempdir()
   
   # load normalization data
   # THIS IS A KLUDGE THAT SHOULD BE FIXED
-  e <- new.env()
-  data(NormEventCountsData, envir=e)
-  NormEventCountsData <- get("NormEventCountsData", envir=e)
-  rm(e)
+  #e <- new.env()
+  #data(NormEventCountsData, envir=e)
+  #NormEventCountsData <- get("NormEventCountsData", envir=e)
+  #rm(e)
   
   if(unit.analysis == "country.day"){ # see here for code annotations
+    ##The pattern for downloading repeats for each unit of analysis
+    #Set destination folder
+    dest <- paste(local.folder, "/daily_country.csv", sep="")
+    #Download data from the GDELT server at UMN
+    dl.daily.country.data <- download.file(url="http://gdelt.umn.edu/data/normfiles/daily_country.csv", 
+                                        destfile=dest, 
+                                        quiet=FALSE)
+    #Read in the downloaded CSV
+    daily.country.data <- read.csv(dest, col.names=c("day", "country", "total"))
+
     x$count <- tapply(x$EventCode, paste(x$ActionGeo_CountryCode, x$SQLDATE), length)[paste(x$ActionGeo_CountryCode, x$SQLDATE)] # code event counts
     #load(unz(paste(getwd(), "/RData.zip", sep = ""), "daily_country.RData")) # get total counts 
-    x <- merge(x, NormEventCountsData$daily.country, by.x = c("ActionGeo_CountryCode", "SQLDATE"), by.y = c("country", "day"), all.x = TRUE) # merge the two together
+    x <- merge(x, daily.country.data, by.x = c("ActionGeo_CountryCode", "SQLDATE"), by.y = c("country", "day"), all.x = TRUE) # merge the two together
     x$norm.count <- x$count/x$total # code the normalized count
     range <- as.Date(as.character(range(x$SQLDATE)), format = "%Y%m%d") # get the first and last date in the data
     days <- format(seq(as.Date(range[1]), to = as.Date(range[2]), by = "1 day"), "%Y%m%d") # create a vector with all dates in the range
@@ -60,9 +74,15 @@ NormEventCounts <- function(x,
     x[, "date"] <- as.Date(x[, "date"], "%Y%m%d") # coerce into date format
   } 
   if(unit.analysis == "country.month"){
+    dest <- paste(local.folder, "/monthly_country.csv", sep="")
+    dl.monthly.country.data <- download.file(url="http://gdelt.umn.edu/data/normfiles/monthly_country.csv", 
+                                        destfile=dest, 
+                                        quiet=FALSE)
+    monthly.country.data <- read.csv(dest, col.names=c("month", "country", "total"))
+
     x$count <- tapply(x$EventCode, paste(x$ActionGeo_CountryCode, x$MonthYear), length)[paste(x$ActionGeo_CountryCode, x$MonthYear)]
     #load(unz(paste(getwd(), "/RData.zip", sep = ""), "monthly_country.RData"))
-    x <- merge(x, NormEventCountsData$monthly.country, by.x = c("ActionGeo_CountryCode", "MonthYear"), by.y = c("country", "month"), all.x = TRUE)
+    x <- merge(x, monthly.country.data, by.x = c("ActionGeo_CountryCode", "MonthYear"), by.y = c("country", "month"), all.x = TRUE)
     x$norm.count <- x$count/x$total
     range <- as.Date(as.character(range(x$SQLDATE)), format = "%Y%m%d") # get the first and last date in the data
     months <- as.integer(format(seq(as.Date(range[1]), to = as.Date(range[2]), by = "1 month"), "%Y%m"))
@@ -75,12 +95,17 @@ NormEventCounts <- function(x,
     x[is.na(x[, paste(var.name, ".norm", sep = "")]), new.vars] <- c(0, 0)
   } 
   if(unit.analysis == "country.year"){ 
+    dest <- paste(local.folder, "/yearly_country.csv", sep="")
+    dl.yearly.country.data <- download.file(url="http://gdelt.umn.edu/data/normfiles/yearly_country.csv", 
+                                        destfile=dest, 
+                                        quiet=FALSE)
+    yearly.country.data <- read.csv(dest, col.names=c("year", "country", "total"))
+
     x$count <- tapply(x$EventCode, paste(x$ActionGeo_CountryCode, x$Year), length)[paste(x$ActionGeo_CountryCode, x$Year)]
     #load(unz(paste(getwd(), "/RData.zip", sep = ""), "yearly_country.RData"))
-    x <- merge(x, NormEventCountsData$yearly.country, by.x = c("ActionGeo_CountryCode", "Year"), by.y = c("country", "year"), all.x = TRUE)
+    x <- merge(x, yearly.country.data, by.x = c("ActionGeo_CountryCode", "Year"), by.y = c("country", "year"), all.x = TRUE)
     x$norm.count <- x$count/x$total
     range <- range(x$Year)
-    if(range[2] > 2012) cat("Normalized counts only available until 2012!")
     x <- unique(subset(x, select = c("ActionGeo_CountryCode", "Year", "count", "norm.count")))
     #load(unz(paste(getwd(), "/RData.zip", sep = ""), "country_codes.RData"))
     complete <- expand.grid(country = NormEventCountsData$countries$fips104, year = range[1]:range[2])
@@ -90,9 +115,15 @@ NormEventCounts <- function(x,
     x[is.na(x[, paste(var.name, ".norm", sep = "")]), new.vars] <- c(0, 0)
   } 
   if(unit.analysis == "day"){
+    dest <- paste(local.folder, "/daily.csv", sep="")
+    dl.daily.data <- download.file(url="http://gdelt.umn.edu/data/normfiles/daily.csv", 
+                                        destfile=dest, 
+                                        quiet=FALSE)
+    daily.data <- read.csv(dest, col.names=c("day", "total"))
+
     x$count <- tapply(x$EventCode, x$SQLDATE, length)[as.factor(x$SQLDATE)]
     #load(unz(paste(getwd(), "/RData.zip", sep = ""), "daily.RData"))
-    x <- merge(x, NormEventCountsData$daily, by.x = "SQLDATE", by.y = "day", all.x = TRUE)		
+    x <- merge(x, daily.data, by.x = "SQLDATE", by.y = "day", all.x = TRUE)		
     x$norm.count <- x$count/x$total
     range <- as.Date(as.character(range(x$SQLDATE)), format = "%Y%m%d")
     days <- format(seq(as.Date(range[1]), to = as.Date(range[2]), by = "1 day"), "%Y%m%d")
@@ -105,9 +136,15 @@ NormEventCounts <- function(x,
     x[, "date"] <- as.Date(x[, "date"], "%Y%m%d")
   } 
   if(unit.analysis == "month"){
+    dest <- paste(local.folder, "/monthly.csv", sep="")
+    dl.monthly.data <- download.file(url="http://gdelt.umn.edu/data/normfiles/monthly.csv", 
+                                        destfile=dest, 
+                                        quiet=FALSE)
+    monthly.data <- read.csv(dest, col.names=c("month", "total"))
+
     x$count <- tapply(x$EventCode, x$SQLDATE, length)[as.factor(x$SQLDATE)]
     #load(unz(paste(getwd(), "/RData.zip", sep = ""), "monthly.RData"))
-    x <- merge(x, NormEventCountsData$monthly, by.x = "MonthYear", by.y = "month", all.x = TRUE)		
+    x <- merge(x, monthly.data, by.x = "MonthYear", by.y = "month", all.x = TRUE)
     x$norm.count <- x$count/x$total
     range <- as.Date(as.character(range(x$SQLDATE)), format = "%Y%m%d")
     months <- as.integer(format(seq(as.Date(range[1]), to = as.Date(range[2]), by = "1 month"), "%Y%m"))
@@ -119,9 +156,15 @@ NormEventCounts <- function(x,
     x[is.na(x[, paste(var.name, ".norm", sep = "")]), new.vars] <- c(0, 0)
   } 
   if(unit.analysis == "year"){
+    dest <- paste(local.folder, "/yearly.csv", sep="")
+    dl.yearly.data <- download.file(url="http://gdelt.umn.edu/data/normfiles/yearly.csv", 
+                                        destfile=dest, 
+                                        quiet=FALSE)
+    yearly.data <- read.csv(dest, col.names=c("year", "total"))
+
     x$count <- tapply(x$EventCode, x$Year, length)[as.factor(x$Year)]
     #load(unz(paste(getwd(), "/RData.zip", sep = ""), "yearly.RData"))
-    x <- merge(x, NormEventCountsData$yearly, by.x = "Year", by.y = "year", all.x = TRUE)		
+    x <- merge(x, yearly.data, by.x = "Year", by.y = "year", all.x = TRUE)		
     x$norm.count <- x$count/x$total
     range <- range(x$Year)
     if(range[2] > 2012) cat("Normalized counts only available until 2012!")
