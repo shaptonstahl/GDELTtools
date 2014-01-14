@@ -59,13 +59,11 @@ NormEventCounts <- function(x,
     daily.country.data <- read.csv(dest, col.names=c("day", "country", "total"))
 
     x$count <- tapply(x$EventCode, paste(x$ActionGeo_CountryCode, x$SQLDATE), length)[paste(x$ActionGeo_CountryCode, x$SQLDATE)] # code event counts
-    #load(unz(paste(getwd(), "/RData.zip", sep = ""), "daily_country.RData")) # get total counts 
     x <- merge(x, daily.country.data, by.x = c("ActionGeo_CountryCode", "SQLDATE"), by.y = c("country", "day"), all.x = TRUE) # merge the two together
     x$norm.count <- x$count/x$total # code the normalized count
     range <- as.Date(as.character(range(x$SQLDATE)), format = "%Y%m%d") # get the first and last date in the data
     days <- format(seq(as.Date(range[1]), to = as.Date(range[2]), by = "1 day"), "%Y%m%d") # create a vector with all dates in the range
     x <- unique(subset(x, select = c("ActionGeo_CountryCode", "SQLDATE", "count", "norm.count"))) # only keep the columns needed & subset to unique country-days
-    #load(unz(paste(getwd(), "/RData.zip", sep = ""), "country_codes.RData")) # get the country FIPS 10-4 codes for merging
     complete <- expand.grid(country = NormEventCountsData$countries$fips104, date = days) # create complete time-series per country
     new.vars <- c(paste(var.name, ".count", sep = ""), paste(var.name, ".norm", sep = "")) # create new names based on user input
     names(x) <- c("country", "date", new.vars) # assign column names
@@ -81,13 +79,11 @@ NormEventCounts <- function(x,
     monthly.country.data <- read.csv(dest, col.names=c("month", "country", "total"))
 
     x$count <- tapply(x$EventCode, paste(x$ActionGeo_CountryCode, x$MonthYear), length)[paste(x$ActionGeo_CountryCode, x$MonthYear)]
-    #load(unz(paste(getwd(), "/RData.zip", sep = ""), "monthly_country.RData"))
     x <- merge(x, monthly.country.data, by.x = c("ActionGeo_CountryCode", "MonthYear"), by.y = c("country", "month"), all.x = TRUE)
     x$norm.count <- x$count/x$total
     range <- as.Date(as.character(range(x$SQLDATE)), format = "%Y%m%d") # get the first and last date in the data
     months <- as.integer(format(seq(as.Date(range[1]), to = as.Date(range[2]), by = "1 month"), "%Y%m"))
     x <- unique(subset(x, select = c("ActionGeo_CountryCode", "MonthYear", "count", "norm.count")))
-    #load(unz(paste(getwd(), "/RData.zip", sep = ""), "country_codes.RData"))
     complete <- expand.grid(country = NormEventCountsData$countries$fips104, month = months) 
     new.vars <- c(paste(var.name, ".count", sep = ""), paste(var.name, ".norm", sep = ""))
     names(x) <- c("country", "month", new.vars) 
@@ -102,12 +98,10 @@ NormEventCounts <- function(x,
     yearly.country.data <- read.csv(dest, col.names=c("year", "country", "total"))
 
     x$count <- tapply(x$EventCode, paste(x$ActionGeo_CountryCode, x$Year), length)[paste(x$ActionGeo_CountryCode, x$Year)]
-    #load(unz(paste(getwd(), "/RData.zip", sep = ""), "yearly_country.RData"))
     x <- merge(x, yearly.country.data, by.x = c("ActionGeo_CountryCode", "Year"), by.y = c("country", "year"), all.x = TRUE)
     x$norm.count <- x$count/x$total
     range <- range(x$Year)
     x <- unique(subset(x, select = c("ActionGeo_CountryCode", "Year", "count", "norm.count")))
-    #load(unz(paste(getwd(), "/RData.zip", sep = ""), "country_codes.RData"))
     complete <- expand.grid(country = NormEventCountsData$countries$fips104, year = range[1]:range[2])
     new.vars <- c(paste(var.name, ".count", sep = ""), paste(var.name, ".norm", sep = ""))
     names(x) <- c("country", "year", new.vars)
@@ -122,7 +116,6 @@ NormEventCounts <- function(x,
     daily.data <- read.csv(dest, col.names=c("day", "total"))
 
     x$count <- tapply(x$EventCode, x$SQLDATE, length)[as.factor(x$SQLDATE)]
-    #load(unz(paste(getwd(), "/RData.zip", sep = ""), "daily.RData"))
     x <- merge(x, daily.data, by.x = "SQLDATE", by.y = "day", all.x = TRUE)		
     x$norm.count <- x$count/x$total
     range <- as.Date(as.character(range(x$SQLDATE)), format = "%Y%m%d")
@@ -143,7 +136,6 @@ NormEventCounts <- function(x,
     monthly.data <- read.csv(dest, col.names=c("month", "total"))
 
     x$count <- tapply(x$EventCode, x$SQLDATE, length)[as.factor(x$SQLDATE)]
-    #load(unz(paste(getwd(), "/RData.zip", sep = ""), "monthly.RData"))
     x <- merge(x, monthly.data, by.x = "MonthYear", by.y = "month", all.x = TRUE)
     x$norm.count <- x$count/x$total
     range <- as.Date(as.character(range(x$SQLDATE)), format = "%Y%m%d")
@@ -163,7 +155,6 @@ NormEventCounts <- function(x,
     yearly.data <- read.csv(dest, col.names=c("year", "total"))
 
     x$count <- tapply(x$EventCode, x$Year, length)[as.factor(x$Year)]
-    #load(unz(paste(getwd(), "/RData.zip", sep = ""), "yearly.RData"))
     x <- merge(x, yearly.data, by.x = "Year", by.y = "year", all.x = TRUE)		
     x$norm.count <- x$count/x$total
     range <- range(x$Year)
