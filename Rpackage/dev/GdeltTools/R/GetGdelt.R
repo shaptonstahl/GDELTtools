@@ -71,7 +71,7 @@ GetGDELT <- function(start.date,
     while( grepl("[/\\\\]$", x) ) x <- substring(x, 1, nchar(x) - 1)
     return(x)
   }
-  local.folder <- StripTrailingSlashes(local.folder)
+  local.folder <- StripTrailingSlashes(path.expand(local.folder))
   historical.url.root <- paste(StripTrailingSlashes(historical.url.root), "/", sep="")
   daily.url.root <- paste(StripTrailingSlashes(daily.url.root), "/", sep="")
   # create the local.folder if is doesn't exist

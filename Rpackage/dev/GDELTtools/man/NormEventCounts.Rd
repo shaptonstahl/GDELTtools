@@ -2,7 +2,8 @@
 \alias{NormEventCounts}
 \title{Scale event counts}
 \usage{
-  NormEventCounts(x, unit.analysis, var.name)
+  NormEventCounts(x, unit.analysis,
+    var.name = "norming_vars")
 }
 \arguments{
   \item{x}{data.frame, a GDELT data.frame.}
@@ -22,7 +23,9 @@
 }
 \details{
   For \code{unit.analysis}, day and country-day put out a
-  data set where date is of class \sQuote{date}.
+  data set where date is of class \sQuote{date}.  All other
+  options put out a data set where year or month is integer
+  (this needs to be unified in a later version).
 }
 \examples{
 \dontrun{
@@ -31,12 +34,14 @@ GDELT.subset.data <- GetGDELT("2013-06-01", "2013-06-07", allow.wildcards=TRUE,
   local.folder="~/gdeltdata")
 GDELT.normed.data <- NormEventCounts(x = GDELT.subset.data,
   unit.analysis="day",
-  var.name="protest")}
+  var.name="protest",
+  local.folder="~/gdeltdata")}
 }
 \author{
   \tabular{ll}{ Oskar N.T. Thoms \tab
   \email{othoms@princeton.edu}\cr Stephen R. Haptonstahl
-  \tab \email{srh@haptonstahl.org}\cr }
+  \tab \email{srh@haptonstahl.org}\cr John Beieler \tab
+  \email{jub270@psu.edu}\cr }
 }
 \references{
   GDELT: Global Data on Events, Location and Tone,

@@ -9,8 +9,9 @@
 #' @return data.frame
 #' @export
 #' @details
-#' For \code{unit.analysis}, day and country-day put out a data set where date is of class \sQuote{date}.
-#  All other options put out a data set where year or month is integer (this needs to be unified in a later version).
+#' For \code{unit.analysis}, day and country-day put out a data set where date
+#' is of class \sQuote{date}.  All other options put out a data set where year
+#' or month is integer (this needs to be unified in a later version).
 #' @references
 #' GDELT: Global Data on Events, Location and Tone, 1979-2012.  
 #' Presented at the 2013 meeting of the International Studies Association
@@ -20,7 +21,7 @@
 #' \tabular{ll}{
 #'   Oskar N.T. Thoms \tab \email{othoms@@princeton.edu}\cr
 #'   Stephen R. Haptonstahl \tab \email{srh@@haptonstahl.org}\cr
-#'   John Beieler \tab \email{jub270@psu.edu}\cr
+#'   John Beieler \tab \email{jub270@@psu.edu}\cr
 #' }
 #' @examples
 #' \dontrun{
@@ -29,22 +30,27 @@
 #'   local.folder="~/gdeltdata")
 #' GDELT.normed.data <- NormEventCounts(x = GDELT.subset.data, 
 #'   unit.analysis="day", 
-#'   var.name="protest")}
+#'   var.name="protest",
+#'   local.folder="~/gdeltdata")}
 NormEventCounts <- function(x, 
                             unit.analysis, 
-                            var.name="norming_vars",
-                            local.folder){
+                            var.name="norming_vars"){
   # files with total event counts are included in the package, but these could be stored on a server and downloaded as needed 
   if(missing(x)) stop("Must specify a data.frame")
   if(missing(unit.analysis)) stop("A unit of analysis must be specified")
-  if(!(unit.analysis %in% c("country.day", "country.month", "country.year", "day", "month", "year"))) stop("Not a valid unit of analysis. Choose from: country.day, country.month, country.year, day, month, year")
+  if(!(unit.analysis %in% c("country.day", 
+                            "country.month", 
+                            "country.year", 
+                            "day", 
+                            "month", 
+                            "year"))) stop("Not a valid unit of analysis. Choose from: country.day, country.month, country.year, day, month, year")
 
-  if(missing(local.folder)) local.folder <- tempdir()
-  
+  local.folder <- tempdir()
+
   if(unit.analysis == "country.day"){ # see here for code annotations
     ##The pattern for downloading repeats for each unit of analysis
     #Set destination folder
-    dest <- paste(local.folder, "/daily_country.csv", sep="")
+    dest <- paste(local.folder, "/norm_counts_daily_country.csv", sep="")
     #Download data from the GDELT server at UMN
     dl.daily.country.data <- download.file(url="http://gdelt.umn.edu/data/normfiles/daily_country.csv", 
                                         destfile=dest, 
@@ -52,21 +58,40 @@ NormEventCounts <- function(x,
     #Read in the downloaded CSV
     daily.country.data <- read.csv(dest, col.names=c("day", "country", "total"))
 
-    x$count <- tapply(x$EventCode, paste(x$ActionGeo_CountryCode, x$SQLDATE), length)[paste(x$ActionGeo_CountryCode, x$SQLDATE)] # code event counts
-    x <- merge(x, daily.country.data, by.x = c("ActionGeo_CountryCode", "SQLDATE"), by.y = c("country", "day"), all.x = TRUE) # merge the two together
-    x$norm.count <- x$count/x$total # code the normalized count
-    range <- as.Date(as.character(range(x$SQLDATE)), format = "%Y%m%d") # get the first and last date in the data
-    days <- format(seq(as.Date(range[1]), to = as.Date(range[2]), by = "1 day"), "%Y%m%d") # create a vector with all dates in the range
-    x <- unique(subset(x, select = c("ActionGeo_CountryCode", "SQLDATE", "count", "norm.count"))) # only keep the columns needed & subset to unique country-days
-    complete <- expand.grid(country = NormEventCountsData$countries$fips104, date = days) # create complete time-series per country
-    new.vars <- c(paste(var.name, ".count", sep = ""), paste(var.name, ".norm", sep = "")) # create new names based on user input
-    names(x) <- c("country", "date", new.vars) # assign column names
-    x <- merge(complete, x, by = c("country", "date"), all.x = TRUE) # merge data into complete time-series
-    x[is.na(x[, paste(var.name, ".norm", sep = "")]), new.vars] <- c(0, 0) # code NAs as 0s
-    x[, "date"] <- as.Date(x[, "date"], "%Y%m%d") # coerce into date format
+    # code event counts
+    x$count <- tapply(x$EventCode, 
+                      paste(x$ActionGeo_CountryCode, x$SQLDATE), length)[paste(x$ActionGeo_CountryCode, x$SQLDATE)]
+    # merge the two together
+    x <- merge(x, daily.country.data, 
+               by.x = c("ActionGeo_CountryCode", "SQLDATE"), 
+               by.y = c("country", "day"), 
+               all.x = TRUE)
+    
+    # code the normalized count as (count of selected events in the country-day) / (all events in the country-day)
+    x$norm.count <- x$count/x$total
+    
+    # get the first and last date in the data
+    range <- as.Date(as.character(range(x$SQLDATE)), format = "%Y%m%d")
+    # create a vector with all dates in the range
+    days <- format(seq(as.Date(range[1]), to = as.Date(range[2]), by = "1 day"), "%Y%m%d")
+    
+    # only keep the columns needed & subset to unique country-days
+    x <- unique(subset(x, select = c("ActionGeo_CountryCode", "SQLDATE", "count", "norm.count")))
+    # create complete time-series per country
+    complete <- expand.grid(country = unique(daily.country.data$country), date = days)
+    # create new names based on user input
+    new.vars <- c(paste(var.name, ".count", sep = ""), paste(var.name, ".norm", sep = ""))
+    # assign column names
+    names(x) <- c("country", "date", new.vars)
+    # merge data into complete time-series
+    x <- merge(complete, x, by = c("country", "date"), all.x = TRUE)
+    # code NAs as 0s
+    x[is.na(x[, paste(var.name, ".norm", sep = "")]), new.vars] <- c(0, 0)
+    # coerce into date format
+    x[, "date"] <- as.Date(x[, "date"], "%Y%m%d") 
   } 
   if(unit.analysis == "country.month"){
-    dest <- paste(local.folder, "/monthly_country.csv", sep="")
+    dest <- paste(local.folder, "/norm_counts_monthly_country.csv", sep="")
     dl.monthly.country.data <- download.file(url="http://gdelt.umn.edu/data/normfiles/monthly_country.csv", 
                                         destfile=dest, 
                                         quiet=FALSE)
@@ -78,14 +103,14 @@ NormEventCounts <- function(x,
     range <- as.Date(as.character(range(x$SQLDATE)), format = "%Y%m%d") # get the first and last date in the data
     months <- as.integer(format(seq(as.Date(range[1]), to = as.Date(range[2]), by = "1 month"), "%Y%m"))
     x <- unique(subset(x, select = c("ActionGeo_CountryCode", "MonthYear", "count", "norm.count")))
-    complete <- expand.grid(country = NormEventCountsData$countries$fips104, month = months) 
+    complete <- expand.grid(country = unique(monthly.country.data$country), month = months) 
     new.vars <- c(paste(var.name, ".count", sep = ""), paste(var.name, ".norm", sep = ""))
     names(x) <- c("country", "month", new.vars) 
     x <- merge(complete, x, by = c("country", "month"), all.x = TRUE)
     x[is.na(x[, paste(var.name, ".norm", sep = "")]), new.vars] <- c(0, 0)
   } 
   if(unit.analysis == "country.year"){ 
-    dest <- paste(local.folder, "/yearly_country.csv", sep="")
+    dest <- paste(local.folder, "/norm_counts_yearly_country.csv", sep="")
     dl.yearly.country.data <- download.file(url="http://gdelt.umn.edu/data/normfiles/yearly_country.csv", 
                                         destfile=dest, 
                                         quiet=FALSE)
@@ -96,14 +121,14 @@ NormEventCounts <- function(x,
     x$norm.count <- x$count/x$total
     range <- range(x$Year)
     x <- unique(subset(x, select = c("ActionGeo_CountryCode", "Year", "count", "norm.count")))
-    complete <- expand.grid(country = NormEventCountsData$countries$fips104, year = range[1]:range[2])
+    complete <- expand.grid(country = unique(yearly.country.data$country), year = range[1]:range[2])
     new.vars <- c(paste(var.name, ".count", sep = ""), paste(var.name, ".norm", sep = ""))
     names(x) <- c("country", "year", new.vars)
     x <- merge(complete, x, by = c("country", "year"), all.x = TRUE) 
     x[is.na(x[, paste(var.name, ".norm", sep = "")]), new.vars] <- c(0, 0)
   } 
   if(unit.analysis == "day"){
-    dest <- paste(local.folder, "/daily.csv", sep="")
+    dest <- paste(local.folder, "/norm_counts_daily.csv", sep="")
     dl.daily.data <- download.file(url="http://gdelt.umn.edu/data/normfiles/daily.csv", 
                                         destfile=dest, 
                                         quiet=FALSE)
@@ -123,7 +148,7 @@ NormEventCounts <- function(x,
     x[, "date"] <- as.Date(x[, "date"], "%Y%m%d")
   } 
   if(unit.analysis == "month"){
-    dest <- paste(local.folder, "/monthly.csv", sep="")
+    dest <- paste(local.folder, "/norm_counts_monthly.csv", sep="")
     dl.monthly.data <- download.file(url="http://gdelt.umn.edu/data/normfiles/monthly.csv", 
                                         destfile=dest, 
                                         quiet=FALSE)
@@ -142,7 +167,7 @@ NormEventCounts <- function(x,
     x[is.na(x[, paste(var.name, ".norm", sep = "")]), new.vars] <- c(0, 0)
   } 
   if(unit.analysis == "year"){
-    dest <- paste(local.folder, "/yearly.csv", sep="")
+    dest <- paste(local.folder, "/norm_counts_yearly.csv", sep="")
     dl.yearly.data <- download.file(url="http://gdelt.umn.edu/data/normfiles/yearly.csv", 
                                         destfile=dest, 
                                         quiet=FALSE)
@@ -159,6 +184,7 @@ NormEventCounts <- function(x,
     x <- merge(complete, x, by = "year", all.x = TRUE)
     x[is.na(x[, paste(var.name, ".norm", sep = "")]), new.vars] <- c(0, 0)
   }
+  
   row.names(x) <- 1:nrow(x)
   return(x)
 }
