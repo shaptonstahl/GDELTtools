@@ -40,13 +40,6 @@ NormEventCounts <- function(x,
 
   if(missing(local.folder)) local.folder <- tempdir()
   
-  # load normalization data
-  # THIS IS A KLUDGE THAT SHOULD BE FIXED
-  #e <- new.env()
-  #data(NormEventCountsData, envir=e)
-  #NormEventCountsData <- get("NormEventCountsData", envir=e)
-  #rm(e)
-  
   if(unit.analysis == "country.day"){ # see here for code annotations
     ##The pattern for downloading repeats for each unit of analysis
     #Set destination folder
@@ -158,7 +151,6 @@ NormEventCounts <- function(x,
     x <- merge(x, yearly.data, by.x = "Year", by.y = "year", all.x = TRUE)		
     x$norm.count <- x$count/x$total
     range <- range(x$Year)
-    if(range[2] > 2012) cat("Normalized counts only available until 2012!")
     x <- unique(subset(x, select = c("Year", "count", "norm.count")))
     complete <- expand.grid(year = range[1]:range[2])
     new.vars <- c(paste(var.name, ".count", sep = ""), paste(var.name, ".norm", sep = ""))
