@@ -1,7 +1,7 @@
 Package: GDELTtools
 Type: Package
 Title: Download, slice, and normalize GDELT data
-Version: 1.2
+Version: 1.1
 Date: 2013-01-14
 Author: Stephen R. Haptonstahl, Thomas Scherer, Timo Thoms, John Beieler, and
     Patrick Wheatley
