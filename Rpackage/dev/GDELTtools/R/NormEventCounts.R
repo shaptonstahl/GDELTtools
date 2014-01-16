@@ -30,8 +30,7 @@
 #'   local.folder="~/gdeltdata")
 #' GDELT.normed.data <- NormEventCounts(x = GDELT.subset.data, 
 #'   unit.analysis="day", 
-#'   var.name="protest",
-#'   local.folder="~/gdeltdata")}
+#'   var.name="protest")}
 NormEventCounts <- function(x, 
                             unit.analysis, 
                             var.name="norming_vars"){

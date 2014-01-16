@@ -34,8 +34,7 @@ GDELT.subset.data <- GetGDELT("2013-06-01", "2013-06-07", allow.wildcards=TRUE,
   local.folder="~/gdeltdata")
 GDELT.normed.data <- NormEventCounts(x = GDELT.subset.data,
   unit.analysis="day",
-  var.name="protest",
-  local.folder="~/gdeltdata")}
+  var.name="protest")}
 }
 \author{
   \tabular{ll}{ Oskar N.T. Thoms \tab

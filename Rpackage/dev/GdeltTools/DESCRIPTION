@@ -16,6 +16,8 @@ Depends:
     plyr,
     TimeWarp,
     tools
+Suggests:
+    testthat
 Collate:
     'DownloadGdelt.R'
     'FileInfo.R'
