@@ -77,8 +77,8 @@ GetGDELT <- function(start.date,
   # create the local.folder if is doesn't exist
   dir.create(local.folder, showWarnings=FALSE, recursive = TRUE)
   
-  start.date <- strftime(dateParse(start.date), format="%Y-%m-%d")
-  end.date <- strftime(dateParse(end.date), format="%Y-%m-%d")
+  start.date <- strftime(TimeWarp::dateParse(start.date), format="%Y-%m-%d")
+  end.date <- strftime(TimeWarp::dateParse(end.date), format="%Y-%m-%d")
   
   out.initialized <- FALSE
   
@@ -151,8 +151,8 @@ GetGDELT <- function(start.date,
   }
   
   # Filter one more time on dates
-  start.date.numeric <- as.numeric(strftime(dateParse(start.date), format="%Y%m%d"))
-  end.date.numeric <- as.numeric(strftime(dateParse(end.date), format="%Y%m%d"))
+  start.date.numeric <- as.numeric(strftime(TimeWarp::dateParse(start.date), format="%Y%m%d"))
+  end.date.numeric <- as.numeric(strftime(TimeWarp::dateParse(end.date), format="%Y%m%d"))
   out <- out[out$SQLDATE >= start.date.numeric & out$SQLDATE <= end.date.numeric,]
   
   return(out)

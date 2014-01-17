@@ -10,16 +10,16 @@ FilterGdeltDataframe <- function(x,
   #   (ActionGeo_ADM1Code=US AND ActionGeo_CountryCode=US)
   if(verbose) cat("Filtering\n\n")
   if(use.regex) {
-    filter.results <- laply(1:length(filter), function(fi) {
-      field.results <- laply(.data=filter[[fi]], .fun=function(v) {
+    filter.results <- plyr::laply(1:length(filter), function(fi) {
+      field.results <- plyr::laply(.data=filter[[fi]], .fun=function(v) {
         grepl(v, x[names(filter)[fi]][,1])
       }, .drop=FALSE)
       if(is.array(field.results)) return(apply(field.results, 2, any))
       else return(field.results)
     })
   } else if(allow.wildcards) {
-    filter.results <- laply(1:length(filter), function(fi) {
-      field.results <- laply(.data=filter[[fi]], .fun=function(v) {
+    filter.results <- plyr::laply(1:length(filter), function(fi) {
+      field.results <- plyr::laply(.data=filter[[fi]], .fun=function(v) {
         v <- gsub("*", "[:alnum:]*", v, fixed=TRUE)
         grepl(v, x[names(filter)[fi]][,1])
       }, .drop=FALSE)
@@ -27,8 +27,8 @@ FilterGdeltDataframe <- function(x,
       else return(field.results)
     })
   } else {
-    filter.results <- laply(1:length(filter), function(fi) {
-      field.results <- laply(.data=filter[[fi]], .fun=function(v) x[names(filter)[fi]]==v, .drop=FALSE)
+    filter.results <- plyr::laply(1:length(filter), function(fi) {
+      field.results <- plyr::laply(.data=filter[[fi]], .fun=function(v) x[names(filter)[fi]]==v, .drop=FALSE)
       if(is.array(field.results)) return(apply(field.results, 2, any))
       else return(field.results)
     })

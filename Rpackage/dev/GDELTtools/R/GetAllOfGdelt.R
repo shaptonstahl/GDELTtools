@@ -53,8 +53,8 @@ GetAllOfGDELT <- function(local.folder,
   # create the local.folder if is doesn't exist
   dir.create(local.folder, showWarnings=FALSE, recursive = TRUE)
   
-  start.date <- strftime(dateParse("1979-01-01"), format="%Y-%m-%d")
-  end.date <- strftime(dateShift(Sys.Date(), by="days", k.by=1, direction=-1), format="%Y-%m-%d")
+  start.date <- strftime(TimeWarp::dateParse("1979-01-01"), format="%Y-%m-%d")
+  end.date <- strftime(TimeWarp::dateShift(Sys.Date(), by="days", k.by=1, direction=-1), format="%Y-%m-%d")
   source.files <- FileListFromDates(startdate=start.date, enddate=end.date)
   source.files <- c(source.files$historic, source.files$daily)
   
