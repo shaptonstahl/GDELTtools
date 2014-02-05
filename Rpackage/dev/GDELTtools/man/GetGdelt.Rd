@@ -2,12 +2,12 @@
 \alias{GetGDELT}
 \title{Download and subset GDELT data}
 \usage{
-GetGDELT(start.date, end.date = start.date, filter,
-  local.folder = tempdir(), max.local.mb = Inf, allow.wildcards = FALSE,
-  use.regex = FALSE,
-  historical.url.root = "http://gdelt.umn.edu/data/backfiles/",
-  daily.url.root = "http://gdelt.umn.edu/data/dailyupdates/",
-  verbose = TRUE)
+  GetGDELT(start.date, end.date = start.date, filter,
+    local.folder = tempdir(), max.local.mb = Inf,
+    allow.wildcards = FALSE, use.regex = FALSE,
+    historical.url.root = "http://gdelt.umn.edu/data/backfiles/",
+    daily.url.root = "http://gdelt.umn.edu/data/dailyupdates/",
+    verbose = TRUE)
 }
 \arguments{
   \item{start.date}{character, just about any
@@ -41,21 +41,22 @@ GetGDELT(start.date, end.date = start.date, filter,
   progress will be displayed.}
 }
 \value{
-data.frame
+  data.frame
 }
 \description{
-Download the GDELT files necessary for a data set, import
-them, filter on various crieteria, and return a data.frame.
+  Download the GDELT files necessary for a data set, import
+  them, filter on various crieteria, and return a
+  data.frame.
 }
 \details{
-If \code{local.folder} is not specified then downloaded
-files are stored in \code{tempdir()}. If a needed file has
-already been downloaded to \code{local.folder} then this
-file is used instead of being downloaded. This can greatly
-speed up future
+  If \code{local.folder} is not specified then downloaded
+  files are stored in \code{tempdir()}. If a needed file
+  has already been downloaded to \code{local.folder} then
+  this file is used instead of being downloaded. This can
+  greatly speed up future
 
-Dates are parsed with \code{dateParse} in the TimeWarp
-package. Years must be given with four digits.
+  Dates are parsed with \code{dateParse} in the TimeWarp
+  package. Years must be given with four digits.
 }
 \section{Filtering Results}{
   This is how you write the \code{filter}.
@@ -76,15 +77,15 @@ test.results <- GetGDELT(start.date="1979-01-01", end.date="1979-12-31",
                          max.local.mb=500)}
 }
 \author{
-\tabular{ll}{ Stephen R. Haptonstahl \tab
-\email{srh@haptonstahl.org}\cr Thomas Scherer \tab
-\email{tscherer@princeton.edu}\cr John Beieler \tab
-\email{jub270@psu.edu}\cr }
+  \tabular{ll}{ Stephen R. Haptonstahl \tab
+  \email{srh@haptonstahl.org}\cr Thomas Scherer \tab
+  \email{tscherer@princeton.edu}\cr John Beieler \tab
+  \email{jub270@psu.edu}\cr }
 }
 \references{
-GDELT: Global Data on Events, Location and Tone, 1979-2012.
-Presented at the 2013 meeting of the International Studies
-Association in San Francisco, CA.
-\url{http://gdelt.utdallas.edu/}
+  GDELT: Global Data on Events, Location and Tone,
+  1979-2012. Presented at the 2013 meeting of the
+  International Studies Association in San Francisco, CA.
+  \url{http://www.gdeltproject.org/}
 }
 

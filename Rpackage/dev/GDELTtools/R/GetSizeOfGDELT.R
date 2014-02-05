@@ -1,5 +1,5 @@
-GetSizeOfGDELT <- function(historical.url.root="http://gdelt.umn.edu/data/backfiles/",
-                           daily.url.root="http://gdelt.umn.edu/data/dailyupdates/") {
+GetSizeOfGDELT <- function(historical.url.root="http://www.gdeltproject.org/data/backfiles/",
+                           daily.url.root="http://www.gdeltproject.org/data/dailyupdates/") {
   
   # Returns the size of the complete data set, compressed, in GB
   

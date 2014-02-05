@@ -13,7 +13,7 @@
 #' GDELT: Global Data on Events, Location and Tone, 1979-2012.  
 #' Presented at the 2013 meeting of the International Studies Association
 #' in San Francisco, CA.
-#' \url{http://gdelt.utdallas.edu/}
+#' \url{http://www.gdeltproject.org/}
 #' @author 
 #' \tabular{ll}{
 #'   Stephen R. Haptonstahl \tab \email{srh@@haptonstahl.org}\cr
@@ -22,8 +22,8 @@
 #' \dontrun{
 #' GetAllOfGDELT("~/gdeltdata")} 
 GetAllOfGDELT <- function(local.folder,
-                          historical.url.root="http://gdelt.umn.edu/data/backfiles/",
-                          daily.url.root="http://gdelt.umn.edu/data/dailyupdates/",
+                          historical.url.root="http://www.gdeltproject.org/data/backfiles/",
+                          daily.url.root="http://www.gdeltproject.org/data/dailyupdates/",
                           force=FALSE) {
   
   if(FALSE == force) {

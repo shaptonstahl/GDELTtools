@@ -16,7 +16,7 @@
 #' GDELT: Global Data on Events, Location and Tone, 1979-2012.  
 #' Presented at the 2013 meeting of the International Studies Association
 #' in San Francisco, CA.
-#' \url{http://gdelt.utdallas.edu/}
+#' \url{http://www.gdeltproject.org/}
 #' @author 
 #' \tabular{ll}{
 #'   Oskar N.T. Thoms \tab \email{othoms@@princeton.edu}\cr
