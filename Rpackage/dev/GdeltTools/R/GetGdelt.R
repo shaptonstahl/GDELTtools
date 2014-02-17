@@ -11,8 +11,7 @@
 #' @param max.local.mb numeric, the maximum size in MB of the downloaded files that will be retained.
 #' @param allow.wildcards logical, must be TRUE to use * in \code{filter} to specify 'any character(s)'.
 #' @param use.regex logical, if TRUE then \code{filter} will be processed as a \code{\link{regular expression}}.
-#' @param historical.url.root character, URL from which historical files will be downloaded.
-#' @param daily.url.root character, URL from which daily files will be downloaded.
+#' @param data.url.root character, URL for the folder with GDELT data files.
 #' @param verbose logical, if TRUE then indications of progress will be displayed.
 #' @return data.frame
 #' @export
@@ -71,8 +70,8 @@ GetGDELT <- function(start.date,
   # create the local.folder if is doesn't exist
   dir.create(local.folder, showWarnings=FALSE, recursive = TRUE)
   
-  start.date <- strftime(TimeWarp::dateParse(start.date), format="%Y-%m-%d")
-  end.date <- strftime(TimeWarp::dateParse(end.date), format="%Y-%m-%d")
+  start.date <- strftime(dateParse(start.date), format="%Y-%m-%d")
+  end.date <- strftime(dateParse(end.date), format="%Y-%m-%d")
   
   out.initialized <- FALSE
   
@@ -141,8 +140,8 @@ GetGDELT <- function(start.date,
   }
   
   # Filter one more time on dates
-  start.date.numeric <- as.numeric(strftime(TimeWarp::dateParse(start.date), format="%Y%m%d"))
-  end.date.numeric <- as.numeric(strftime(TimeWarp::dateParse(end.date), format="%Y%m%d"))
+  start.date.numeric <- as.numeric(strftime(dateParse(start.date), format="%Y%m%d"))
+  end.date.numeric <- as.numeric(strftime(dateParse(end.date), format="%Y%m%d"))
   out <- out[out$SQLDATE >= start.date.numeric & out$SQLDATE <= end.date.numeric,]
   
   return(out)

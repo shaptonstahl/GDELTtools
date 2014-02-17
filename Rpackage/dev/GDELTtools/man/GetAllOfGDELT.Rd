@@ -9,11 +9,8 @@ GetAllOfGDELT(local.folder,
   \item{local.folder}{character, path to the file to be
   validated.}
 
-  \item{historical.url.root}{character, URL for the folder
-  with older GDELT files.}
-
-  \item{daily.url.root}{character, URL for the folder with
-  daily GDELT files.}
+  \item{data.url.root}{character, URL for the folder with
+  GDELT data files.}
 
   \item{force}{logical, if TRUE then the download is
   carried out without further prompting the user.}

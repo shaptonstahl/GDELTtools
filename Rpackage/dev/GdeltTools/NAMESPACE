@@ -1,3 +1,5 @@
 export(GetAllOfGDELT)
 export(GetGDELT)
 export(NormEventCounts)
+importFrom(TimeWarp, dateParse)    # used in GetGDELT
+importFrom(plyr, laply, ldply)     # used in FilterGdeltDataframe, FileInfo

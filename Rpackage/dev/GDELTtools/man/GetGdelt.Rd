@@ -29,11 +29,8 @@ GetGDELT(start.date, end.date = start.date, filter,
   \item{use.regex}{logical, if TRUE then \code{filter} will
   be processed as a \code{\link{regular expression}}.}
 
-  \item{historical.url.root}{character, URL from which
-  historical files will be downloaded.}
-
-  \item{daily.url.root}{character, URL from which daily
-  files will be downloaded.}
+  \item{data.url.root}{character, URL for the folder with
+  GDELT data files.}
 
   \item{verbose}{logical, if TRUE then indications of
   progress will be displayed.}

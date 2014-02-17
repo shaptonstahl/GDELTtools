@@ -4,8 +4,7 @@
 #' 
 #' @aliases GetAllOfGDELT
 #' @param local.folder character, path to the file to be validated.
-#' @param historical.url.root character, URL for the folder with older GDELT files.
-#' @param daily.url.root character, URL for the folder with daily GDELT files.
+#' @param data.url.root character, URL for the folder with GDELT data files.
 #' @param force logical, if TRUE then the download is carried out without further prompting the user.
 #' @return logical, TRUE if all files were downloaded successfully.
 #' @export
