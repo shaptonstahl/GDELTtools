@@ -62,18 +62,12 @@ GetGDELT <- function(start.date,
                      max.local.mb=Inf,
                      allow.wildcards=FALSE, 
                      use.regex=FALSE,
-                     historical.url.root="http://gdelt.umn.edu/data/backfiles/",
-                     daily.url.root="http://gdelt.umn.edu/data/dailyupdates/",
+                     data.url.root="http://data.gdeltproject.org/events/",
                      verbose=TRUE) {
   
   # Coerce ending slashes as needed
-  StripTrailingSlashes <- function(x) {
-    while( grepl("[/\\\\]$", x) ) x <- substring(x, 1, nchar(x) - 1)
-    return(x)
-  }
   local.folder <- StripTrailingSlashes(path.expand(local.folder))
-  historical.url.root <- paste(StripTrailingSlashes(historical.url.root), "/", sep="")
-  daily.url.root <- paste(StripTrailingSlashes(daily.url.root), "/", sep="")
+  data.url.root <- paste(StripTrailingSlashes(data.url.root), "/", sep="")
   # create the local.folder if is doesn't exist
   dir.create(local.folder, showWarnings=FALSE, recursive = TRUE)
   
@@ -83,9 +77,7 @@ GetGDELT <- function(start.date,
   out.initialized <- FALSE
   
   # Determine file list based on dates
-  source.files <- FileListFromDates(startdate=start.date, enddate=end.date)
-  source.files <- c(source.files$historic, source.files$daily)
-  
+  source.files <- FileListFromDates(start.date=start.date, end.date=end.date)  
   
   # Ingest and filter local files
   for(this.file in LocalVersusRemote(filelist=source.files, local.folder=local.folder)$local) {
@@ -115,8 +107,7 @@ GetGDELT <- function(start.date,
     download.result <- DownloadGdelt(f=this.file,
                                      local.folder=local.folder,
                                      max.local.mb=max.local.mb,
-                                     historical.url.root=historical.url.root,
-                                     daily.url.root=daily.url.root,
+                                     data.url.root=data.url.root,
                                      verbose=verbose)
     if(FALSE == download.result) {
       stop("Unable to download file ", this.file, ". Please try again. If you get this result again, the file might not be available on the server.")
@@ -126,8 +117,7 @@ GetGDELT <- function(start.date,
       download.result <- DownloadGdelt(f=this.file,
                                        local.folder=local.folder,
                                        max.local.mb=max.local.mb,
-                                       historical.url.root=historical.url.root,
-                                       daily.url.root=daily.url.root,
+                                       data.url.root=data.url.root,
                                        verbose=verbose)
       if(FALSE == IsValidGDELT(f=this.file, local.folder=local.folder)) {
         stop("Unable to verify the integrity of ", this.file)
