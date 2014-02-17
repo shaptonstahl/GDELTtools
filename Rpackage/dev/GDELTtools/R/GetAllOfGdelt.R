@@ -22,16 +22,16 @@
 #' \dontrun{
 #' GetAllOfGDELT("~/gdeltdata")} 
 GetAllOfGDELT <- function(local.folder,
-                          historical.url.root="http://www.gdeltproject.org/data/backfiles/",
-                          daily.url.root="http://www.gdeltproject.org/data/dailyupdates/",
+                          data.url.root="http://data.gdeltproject.org/events/",
                           force=FALSE) {
   
   if(FALSE == force) {
     # ask the user if they are sure
+    size.of.GDELT <- GetSizeOfGDELT()
     w <- strwrap(paste("The compressed GDELT data set is currently ",
-                       round(GetSizeOfGDELT(), 1),
+                       round(size.of.GDELT, 1),
                        "GB. It will take a long time to download and requires a lot of room (",
-                       round(GetSizeOfGDELT(), 1),
+                       round(size.of.GDELT, 1),
                        "GB) where you store it. Please verify that you have sufficient free space on the drive where you intend to store it.",
                        sep=""))
     writeLines(w)
@@ -43,20 +43,12 @@ GetAllOfGDELT <- function(local.folder,
   }
   
   # Coerce ending slashes as needed
-  StripTrailingSlashes <- function(x) {
-    while( grepl("[/\\\\]$", x) ) x <- substring(x, 1, nchar(x) - 1)
-    return(x)
-  }
   local.folder <- StripTrailingSlashes(path.expand(local.folder))
-  historical.url.root <- paste(StripTrailingSlashes(historical.url.root), "/", sep="")
-  daily.url.root <- paste(StripTrailingSlashes(daily.url.root), "/", sep="")
+  data.url.root <- paste(StripTrailingSlashes(data.url.root), "/", sep="")
   # create the local.folder if is doesn't exist
   dir.create(local.folder, showWarnings=FALSE, recursive = TRUE)
   
-  start.date <- strftime(TimeWarp::dateParse("1979-01-01"), format="%Y-%m-%d")
-  end.date <- strftime(TimeWarp::dateShift(Sys.Date(), by="days", k.by=1, direction=-1), format="%Y-%m-%d")
-  source.files <- FileListFromDates(startdate=start.date, enddate=end.date)
-  source.files <- c(source.files$historic, source.files$daily)
+  source.files <- ListAllGDELTFiles()$compressed
   
   res <- sapply(source.files, function(this.file) {
     this.res <- FALSE
@@ -76,8 +68,7 @@ GetAllOfGDELT <- function(local.folder,
       download.result <- DownloadGdelt(f=this.file,
                                        local.folder=local.folder,
                                        max.local.mb=Inf,
-                                       historical.url.root=historical.url.root,
-                                       daily.url.root=daily.url.root,
+                                       data.url.root=data.url.root,
                                        verbose=TRUE)
       if(TRUE == download.result) {
         if(FALSE == IsValidGDELT(f=this.file, local.folder=local.folder)) {
@@ -85,8 +76,7 @@ GetAllOfGDELT <- function(local.folder,
           download.result <- DownloadGdelt(f=this.file,
                                            local.folder=local.folder,
                                            max.local.mb=Inf,
-                                           historical.url.root=historical.url.root,
-                                           daily.url.root=daily.url.root,
+                                           data.url.root=data.url.root,
                                            verbose=TRUE)
           if(TRUE == IsValidGDELT(f=this.file, local.folder=local.folder)) {
             this.res <- TRUE

@@ -51,7 +51,7 @@ NormEventCounts <- function(x,
     #Set destination folder
     dest <- paste(local.folder, "/norm_counts_daily_country.csv", sep="")
     #Download data from the GDELT server at UMN
-    dl.daily.country.data <- download.file(url="http://gdelt.umn.edu/data/normfiles/daily_country.csv", 
+    dl.daily.country.data <- download.file(url="http://data.gdeltproject.org/normfiles/daily_country.csv", 
                                         destfile=dest, 
                                         quiet=FALSE)
     #Read in the downloaded CSV
@@ -91,7 +91,7 @@ NormEventCounts <- function(x,
   } 
   if(unit.analysis == "country.month"){
     dest <- paste(local.folder, "/norm_counts_monthly_country.csv", sep="")
-    dl.monthly.country.data <- download.file(url="http://gdelt.umn.edu/data/normfiles/monthly_country.csv", 
+    dl.monthly.country.data <- download.file(url="http://data.gdeltproject.org/normfiles/monthly_country.csv", 
                                         destfile=dest, 
                                         quiet=FALSE)
     monthly.country.data <- read.csv(dest, col.names=c("month", "country", "total"))
@@ -110,7 +110,7 @@ NormEventCounts <- function(x,
   } 
   if(unit.analysis == "country.year"){ 
     dest <- paste(local.folder, "/norm_counts_yearly_country.csv", sep="")
-    dl.yearly.country.data <- download.file(url="http://gdelt.umn.edu/data/normfiles/yearly_country.csv", 
+    dl.yearly.country.data <- download.file(url="http://data.gdeltproject.org/normfiles/yearly_country.csv", 
                                         destfile=dest, 
                                         quiet=FALSE)
     yearly.country.data <- read.csv(dest, col.names=c("year", "country", "total"))
@@ -128,7 +128,7 @@ NormEventCounts <- function(x,
   } 
   if(unit.analysis == "day"){
     dest <- paste(local.folder, "/norm_counts_daily.csv", sep="")
-    dl.daily.data <- download.file(url="http://gdelt.umn.edu/data/normfiles/daily.csv", 
+    dl.daily.data <- download.file(url="http://data.gdeltproject.org/normfiles/daily.csv", 
                                         destfile=dest, 
                                         quiet=FALSE)
     daily.data <- read.csv(dest, col.names=c("day", "total"))
@@ -148,7 +148,7 @@ NormEventCounts <- function(x,
   } 
   if(unit.analysis == "month"){
     dest <- paste(local.folder, "/norm_counts_monthly.csv", sep="")
-    dl.monthly.data <- download.file(url="http://gdelt.umn.edu/data/normfiles/monthly.csv", 
+    dl.monthly.data <- download.file(url="http://data.gdeltproject.org/normfiles/monthly.csv", 
                                         destfile=dest, 
                                         quiet=FALSE)
     monthly.data <- read.csv(dest, col.names=c("month", "total"))
@@ -167,7 +167,7 @@ NormEventCounts <- function(x,
   } 
   if(unit.analysis == "year"){
     dest <- paste(local.folder, "/norm_counts_yearly.csv", sep="")
-    dl.yearly.data <- download.file(url="http://gdelt.umn.edu/data/normfiles/yearly.csv", 
+    dl.yearly.data <- download.file(url="http://data.gdeltproject.org/normfiles/yearly.csv", 
                                         destfile=dest, 
                                         quiet=FALSE)
     yearly.data <- read.csv(dest, col.names=c("year", "total"))

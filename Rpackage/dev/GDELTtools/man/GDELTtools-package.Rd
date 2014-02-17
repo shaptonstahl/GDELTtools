@@ -14,8 +14,8 @@ that data to facilitate valid timeseries analysis.
 \tabular{ll}{
 Package: \tab GDELTtools\cr
 Type: \tab Package\cr
-Version: \tab 1.0\cr
-Date: \tab 2013-10-01\cr
+Version: \tab 1.2\cr
+Date: \tab 2014-02-16\cr
 License: \tab MIT + file LICENSE\cr
 }
 \code{\link{GetGDELT}} is used to download and subset data.
@@ -29,6 +29,7 @@ counts appropriately for conducting time series analysis.
     Thomas Scherer \tab \email{tscherer@princeton.edu}\cr
     Oskar N.T. Thoms \tab \email{othoms@princeton.edu}\cr
     John Beieler \tab \email{jub270@psu.edu}\cr
+    Patrick Wheatley \tab \email{pvwheatley@gmail.com}\cr
   }
 
 Maintainer: Stephen R. Haptonstahl \email{srh@haptonstahl.org}
