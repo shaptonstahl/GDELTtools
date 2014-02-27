@@ -73,10 +73,13 @@ GetGDELT <- function(start.date,
   start.date <- strftime(dateParse(start.date), format="%Y-%m-%d")
   end.date <- strftime(dateParse(end.date), format="%Y-%m-%d")
   
+  if(start.date <= "2014-01-25" & end.date >= "2014-01-23") warning("Your date range includes some or all of Feb 23-25, 2014. GDELT data is not available for these dates.")
+  
   out.initialized <- FALSE
   
   # Determine file list based on dates
-  source.files <- FileListFromDates(start.date=start.date, end.date=end.date)  
+  source.files <- FileListFromDates(start.date=start.date, end.date=end.date)
+  if(0 == length(source.files)) stop("No GDELT files available for the dates specified")
   
   # Ingest and filter local files
   for(this.file in LocalVersusRemote(filelist=source.files, local.folder=local.folder)$local) {

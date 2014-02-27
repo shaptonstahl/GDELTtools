@@ -54,5 +54,8 @@ FileListFromDates <- function(start.date, end.date=start.date){
                         ".export.CSV.zip", sep=""))
   }
   
+  # Remove dates GDELT just doesn't have
+  out <- setdiff(out, c("20140123.export.CSV.zip","20140124.export.CSV.zip","20140125.export.CSV.zip"))
+  
   return( out )
 }
