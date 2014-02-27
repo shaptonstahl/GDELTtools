@@ -18,17 +18,3 @@ Imports:
     TimeWarp
 Suggests:
     testthat
-Collate:
-    'DownloadGdelt.R'
-    'FileInfo.R'
-    'FileListFromDates.R'
-    'FilterGdeltDataframe.R'
-    'GdeltZipToDataframe.R'
-    'GetAllOfGdelt.R'
-    'GetGdelt.R'
-    'GetSizeOfGDELT.R'
-    'IsValidGDELT.R'
-    'ListAllGDELTFiles.R'
-    'LocalVersusRemote.R'
-    'NormEventCounts.R'
-    'StripTrailingSlashes.R'

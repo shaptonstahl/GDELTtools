@@ -1,3 +1,3 @@
 library(testthat)
 
-test_package("GDELTtools")
+test_check("GDELTtools")
