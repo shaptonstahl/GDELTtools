@@ -5,35 +5,35 @@
 \title{Download and subset GDELT data}
 \usage{
 GetGDELT(
-  start.date,
-  end.date = start.date,
+  start_date,
+  end_date = start_date,
   filter,
-  local.folder = tempdir(),
-  max.local.mb = Inf,
-  allow.wildcards = FALSE,
-  use.regex = FALSE,
-  data.url.root = "http://data.gdeltproject.org/events/",
+  local_folder = tempdir(),
+  max_local_mb = Inf,
+  allow_wildcards = FALSE,
+  use_regex = FALSE,
+  data_url_root = "http://data.gdeltproject.org/events/",
   verbose = TRUE
 )
 }
 \arguments{
-\item{start.date}{character, just about any human-readable form of the earliest date to include.}
+\item{start_date}{character, just about any human-readable form of the earliest date to include.}
 
-\item{end.date}{character, just about any human-readable form of the latest date to include.}
+\item{end_date}{character, just about any human-readable form of the latest date to include.}
 
 \item{filter}{list, named list encoding the values to include for specified fields. See Details.}
 
-\item{local.folder}{character, if specified, where downloaded files will be saved.}
+\item{local_folder}{character, if specified, where downloaded files will be saved.}
 
-\item{max.local.mb}{numeric, the maximum size in MB of the downloaded files that will be retained.}
+\item{max_local_mb}{numeric, the maximum size in MB of the downloaded files that will be retained.}
 
-\item{allow.wildcards}{logical, must be TRUE to use * in \code{filter} to specify 'any character(s)'.}
+\item{allow_wildcards}{logical, must be TRUE to use * in \code{filter} to specify 'any character(s)'.}
 
-\item{use.regex}{logical, if TRUE then \code{filter} will be processed as a \code{\link{regular expression}}.}
+\item{use_regex}{logical, if TRUE then \code{filter} will be processed as a \code{\link{regular expression}}.}
 
-\item{data.url.root}{character, URL for the folder with GDELT data files.}
+\item{data_url_root}{character, URL for the folder with GDELT data files.}
 
-\item{verbose}{logical, if TRUE then indications of progress will be displayed.}
+\item{verbose}{logical, if TRUE then indications of progress will be displayed_}
 }
 \value{
 data.frame
@@ -43,8 +43,8 @@ Download the GDELT files necessary for a data set, import them,
 filter on various criteria, and return a data.frame.
 }
 \details{
-If \code{local.folder} is not specified then downloaded files are stored in
-\code{tempdir()}. If a needed file has already been downloaded to \code{local.folder}
+If \code{local_folder} is not specified then downloaded files are stored in
+\code{tempdir()}. If a needed file has already been downloaded to \code{local_folder}
 then this file is used instead of being downloaded. This can greatly speed up future
 
 
@@ -59,21 +59,21 @@ This is how you write the \code{filter}.
 
 \examples{
 \dontrun{
-test.filter <- list(ActionGeo_ADM1Code=c("NI", "US"), ActionGeo_CountryCode="US")
-test.results <- GetGDELT(start.date="1979-01-01", end.date="1979-12-31", 
-  filter=test.filter)
-table(test.results$ActionGeo_ADM1Code)
-table(test.results$ActionGeo_CountryCode)}
+test_filter <- list(ActionGeo_ADM1Code=c("NI", "US"), ActionGeo_CountryCode="US")
+test_results <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31", 
+  filter=test_filter)
+table(test_results$ActionGeo_ADM1Code)
+table(test_results$ActionGeo_CountryCode)}
 
 # Specify a local folder to store the downloaded files
 \dontrun{
-test.results <- GetGDELT(start.date="1979-01-01", end.date="1979-12-31", 
-                         filter=test.filter,
-                         local.folder="~/gdeltdata",
-                         max.local.mb=500)}
+test_results <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31", 
+                         filter=test_filter,
+                         local_folder="~/gdeltdata",
+                         max_local_mb=500)}
 }
 \references{
-GDELT: Global Data on Events, Location and Tone, 1979-2012.  
+GDELT: Global Data on Events, Location and Tone, 1979-2021.  
 Presented at the 2013 meeting of the International Studies Association
 in San Francisco, CA.
 \url{https://www.gdeltproject.org/}

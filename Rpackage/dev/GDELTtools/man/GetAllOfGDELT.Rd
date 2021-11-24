@@ -5,15 +5,15 @@
 \title{Download all the GDELT files to a local folder}
 \usage{
 GetAllOfGDELT(
-  local.folder,
-  data.url.root = "https://data.gdeltproject.org/events/",
+  local_folder,
+  data_url_root = "http://data.gdeltproject.org/events/",
   force = FALSE
 )
 }
 \arguments{
-\item{local.folder}{character, path to the file to be validated.}
+\item{local_folder}{character, path to the file to be validated.}
 
-\item{data.url.root}{character, URL for the folder with GDELT data files.}
+\item{data_url_root}{character, URL for the folder with GDELT data files.}
 
 \item{force}{logical, if TRUE then the download is carried out without further prompting the user.}
 }
@@ -21,14 +21,14 @@ GetAllOfGDELT(
 logical, TRUE if all files were downloaded successfully.
 }
 \description{
-Downloads all (missing) GDELT files. ** This takes a long time and a lot of space. **
+Downloads all GDELT files not already present locally. ** This takes a long time and a lot of space. **
 }
 \examples{
 \dontrun{
 GetAllOfGDELT("~/gdeltdata")} 
 }
 \references{
-GDELT: Global Data on Events, Location and Tone, 1979-2012.  
+GDELT: Global Data on Events, Location and Tone, 1979-2021.  
 Presented at the 2013 meeting of the International Studies Association
 in San Francisco, CA.
 \url{https://www.gdeltproject.org/}
