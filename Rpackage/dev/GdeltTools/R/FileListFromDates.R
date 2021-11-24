@@ -1,6 +1,6 @@
 ## Segment of code that returns list of all necessary GDELT files to cover the time span specified
 
-# input startdate and enddate in the form "yyyy-mm-dd"
+# Input start_date and end_date in the form "yyyy-mm-dd".
 
 FileListFromDates <- function(start_date, end_date=start_date){  
   

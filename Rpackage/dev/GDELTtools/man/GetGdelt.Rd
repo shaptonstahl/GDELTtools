@@ -43,13 +43,13 @@ Download the GDELT files necessary for a data set, import them,
 filter on various criteria, and return a data.frame.
 }
 \details{
+Dates are parsed with \code{dateParse} in the TimeWarp package. 
+Years must be given with four digits.
+
 If \code{local_folder} is not specified then downloaded files are stored in
 \code{tempdir()}. If a needed file has already been downloaded to \code{local_folder}
 then this file is used instead of being downloaded. This can greatly speed up future
-
-
-Dates are parsed with \code{dateParse} in the TimeWarp package. 
-Years must be given with four digits.
+downloads.
 }
 \section{Filtering Results}{
 

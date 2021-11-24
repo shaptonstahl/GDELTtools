@@ -17,13 +17,14 @@
 #' @export
 #' @details
 #' 
+#' Dates are parsed with \code{dateParse} in the TimeWarp package. 
+#' Years must be given with four digits.
+#'
 #' If \code{local_folder} is not specified then downloaded files are stored in
 #' \code{tempdir()}. If a needed file has already been downloaded to \code{local_folder}
 #' then this file is used instead of being downloaded. This can greatly speed up future
+#' downloads.
 #' 
-#' 
-#' Dates are parsed with \code{dateParse} in the TimeWarp package. 
-#' Years must be given with four digits.
 #' 
 #' @section Filtering Results:
 #' 
