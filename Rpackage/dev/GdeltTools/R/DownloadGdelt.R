@@ -22,7 +22,7 @@ DownloadGdelt <- function(f,
   
   # Download the file
   op <- options()
-  options(HTTPUserAgent=paste("GDELTtools v", package_version("GDELTtools"),
+  options(HTTPUserAgent=paste("GDELTtools v", packageVersion("GDELTtools"),
                               " in ", getOption("HTTPUserAgent"),
                               sep=""))
   result <- download.file(url=paste(data_url_root, f, sep=""),
