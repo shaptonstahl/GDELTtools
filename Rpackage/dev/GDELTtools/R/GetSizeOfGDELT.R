@@ -1,4 +1,4 @@
-GetSizeOfGDELT <- function(filesize.url="http://data.gdeltproject.org/events/filesizes") {
+GetSizeOfGDELT <- function(filesize.url="https://data.gdeltproject.org/events/filesizes") {
   
   # Returns the size of the complete data set, compressed, in GB
   

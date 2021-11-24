@@ -1,9 +1,9 @@
 DownloadGdelt <- function(f,
                           local.folder,
                           max.local.mb,
-                          data.url.root="http://data.gdeltproject.org/events/",
+                          data.url.root="https://data.gdeltproject.org/events/",
                           verbose=TRUE) {
-  # Dowloads a single file, then removes files if necessary to get under max.local.mb
+  # Downloads a single file, then removes files if necessary to get under max.local.mb
   # Returns TRUE if file downloaded successfully, FALSE otherwise
   # DOES NOT GIVE A WARNING if non-gdelt files are in the local.folder
   
@@ -19,7 +19,7 @@ DownloadGdelt <- function(f,
   
   # Download the file
   op <- options()
-  options(HTTPUserAgent=paste("GDELTtools v", packageVersion("GDELTtools"),
+  options(HTTPUserAgent=paste("GDELTtools v", package_version("GDELTtools"),
                               " in ", getOption("HTTPUserAgent"),
                               sep=""))
   result <- download.file(url=paste(data.url.root, f, sep=""),

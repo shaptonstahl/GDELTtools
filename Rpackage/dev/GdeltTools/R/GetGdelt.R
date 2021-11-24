@@ -1,7 +1,7 @@
 #' Download and subset GDELT data
 #'
 #' Download the GDELT files necessary for a data set, import them,
-#' filter on various crieteria, and return a data.frame. 
+#' filter on various criteria, and return a data.frame. 
 #' 
 #' @aliases GetGDELT
 #' @param start.date character, just about any human-readable form of the earliest date to include.
@@ -33,7 +33,7 @@
 #' GDELT: Global Data on Events, Location and Tone, 1979-2012.  
 #' Presented at the 2013 meeting of the International Studies Association
 #' in San Francisco, CA.
-#' \url{http://www.gdeltproject.org/}
+#' \url{https://www.gdeltproject.org/}
 #' @author 
 #' \tabular{ll}{
 #'   Stephen R. Haptonstahl \tab \email{srh@@haptonstahl.org}\cr

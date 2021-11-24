@@ -2,7 +2,7 @@
 \alias{GDELTtools}
 \docType{package}
 \title{
-Download, slice, and normalize GDELT data
+Download, Slice, and Normalize GDELT data
 }
 \description{
 The GDELT data set is over 60 GB now and growing 100 MB a month. 
@@ -14,8 +14,8 @@ that data to facilitate valid timeseries analysis.
 \tabular{ll}{
 Package: \tab GDELTtools\cr
 Type: \tab Package\cr
-Version: \tab 1.2\cr
-Date: \tab 2014-02-17\cr
+Version: \tab 2.0\cr
+Date: \tab 2021-11-23\cr
 License: \tab MIT + file LICENSE\cr
 }
 \code{\link{GetGDELT}} is used to download and subset data.
@@ -37,7 +37,7 @@ Maintainer: Stephen R. Haptonstahl \email{srh@haptonstahl.org}
   GDELT: Global Data on Events, Location and Tone,
   1979-2012. Presented at the 2013 meeting of the
   International Studies Association in San Francisco, CA.
-  \url{http://gdelt.utdallas.edu/}
+  \url{https://www.gdeltproject.org/}
 }
 \keyword{ ts }
 \keyword{ survival }
