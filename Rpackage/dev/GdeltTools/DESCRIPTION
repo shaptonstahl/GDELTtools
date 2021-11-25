@@ -1,7 +1,7 @@
 Package: GDELTtools
 Type: Package
 Title: Download, Slice, and Normalize GDELT Data
-Version: 1.5
+Version: 2.0
 Date: 2021-11-28
 Author: Stephen R. Haptonstahl, Thomas Scherer, Timo Thoms, and Patrick Wheatley
 Maintainer: Stephen R. Haptonstahl <srh@haptonstahl.org>
@@ -15,7 +15,9 @@ Depends:
     utils
 Imports:
     plyr,
-    TimeWarp
+    TimeWarp,
+    dplyr
 Suggests:
     testthat
 RoxygenNote: 7.1.2
+Encoding: UTF-8

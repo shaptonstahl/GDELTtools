@@ -2,6 +2,7 @@ export(GetAllOfGDELT)
 export(GetGDELT)
 export(NormEventCounts)
 importFrom(TimeWarp, dateParse)    # used in GetGDELT
-importFrom(plyr, laply, ldply)     # used in FilterGdeltDataframe, FileInfo
-importFrom("utils", "download.file", "read.csv", "read.delim", "unzip")
+importFrom(dplyr, filter, select)  # used in FilterGdeltDataframe
+importFrom(plyr, laply, ldply)     # used in FileInfo
+importFrom("utils", "download.file", "read.csv", "read.delim", "unzip", "packageVersion")
 importFrom("tools", "md5sum")

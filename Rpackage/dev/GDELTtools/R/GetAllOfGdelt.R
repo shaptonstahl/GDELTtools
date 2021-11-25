@@ -9,7 +9,7 @@
 #' @return logical, TRUE if all files were downloaded successfully.
 #' @export
 #' @references
-#' GDELT: Global Data on Events, Location and Tone, 1979-2021.  
+#' GDELT: Global Data on Events, Location and Tone, 1979-2013.  
 #' Presented at the 2013 meeting of the International Studies Association
 #' in San Francisco, CA.
 #' \url{https://www.gdeltproject.org/}

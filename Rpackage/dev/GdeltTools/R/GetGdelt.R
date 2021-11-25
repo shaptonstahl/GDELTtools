@@ -1,18 +1,16 @@
 #' Download and subset GDELT data
 #'
-#' Download the GDELT files necessary for a data set, import them,
-#' filter on various criteria, and return a data.frame. 
+#' Download the GDELT files necessary for a data set, import them, filter on various criteria, and return a data.frame. 
 #' 
 #' @aliases GetGDELT
 #' @param start_date character, just about any human-readable form of the earliest date to include.
 #' @param end_date character, just about any human-readable form of the latest date to include.
-#' @param filter list, named list encoding the values to include for specified fields. See Details.
 #' @param local_folder character, if specified, where downloaded files will be saved.
 #' @param max_local_mb numeric, the maximum size in MB of the downloaded files that will be retained.
-#' @param allow_wildcards logical, must be TRUE to use * in \code{filter} to specify 'any character(s)'.
-#' @param use_regex logical, if TRUE then \code{filter} will be processed as a \code{\link{regular expression}}.
 #' @param data_url_root character, URL for the folder with GDELT data files.
 #' @param verbose logical, if TRUE then indications of progress will be displayed_
+#' @param row_filter <data-masking> Row selection. Expressions that return a logical value, and are defined in terms of the variables in GDELT. If multiple expressions are included, they are combined with the & operator. Only rows for which all conditions evaluate to TRUE are kept.
+#' @param ... <tidy-select>, Column selection. This takes the form of one or more unquoted expressions separated by commas. Variable names can be used as if they were positions in the data frame, so expressions like x:y can be used to select a range of variables.
 #' @return data.frame
 #' @export
 #' @details
@@ -25,13 +23,18 @@
 #' then this file is used instead of being downloaded. This can greatly speed up future
 #' downloads.
 #' 
-#' 
 #' @section Filtering Results:
 #' 
-#' This is how you write the \code{filter}.
+#' The \code{row_filter} is passed to \code{\link[dplyr]{filter}}. This is a very flexible way to filter
+#' the rows. It's well worth checking out the \code{\link[dplyr]{filter}} documentation.
+#' 
+#' @section Selecting Columns:
+#' 
+#' The \code{...} is passed to \code{\link[dplyr]{select}}. This is a very flexible way to choose
+#' which columns to return. It's well worth checking out the \code{\link[dplyr]{select}} documentation.
 #' 
 #' @references
-#' GDELT: Global Data on Events, Location and Tone, 1979-2021.  
+#' GDELT: Global Data on Events, Location and Tone, 1979-2013.  
 #' Presented at the 2013 meeting of the International Studies Association
 #' in San Francisco, CA.
 #' \url{https://www.gdeltproject.org/}
@@ -43,6 +46,9 @@
 #' }
 #' @examples
 #' \dontrun{
+#' test_results <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
+#'   row_filter=ActionGeo_CountryCode="US")
+#' 
 #' test_filter <- list(ActionGeo_ADM1Code=c("NI", "US"), ActionGeo_CountryCode="US")
 #' test_results <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31", 
 #'   filter=test_filter)
@@ -57,13 +63,12 @@
 #'                          max_local_mb=500)}
 GetGDELT <- function(start_date,
                      end_date=start_date,
-                     filter,
                      local_folder=tempdir(),
                      max_local_mb=Inf,
-                     allow_wildcards=FALSE, 
-                     use_regex=FALSE,
                      data_url_root="http://data.gdeltproject.org/events/",
-                     verbose=TRUE) {
+                     verbose=TRUE,
+                     row_filter=TRUE,
+                     ...) {
   
   # Coerce ending slashes as needed
   local_folder <- StripTrailingSlashes(path.expand(local_folder))
@@ -92,11 +97,10 @@ GetGDELT <- function(start_date,
     new_data <- GdeltZipToDataframe(f=paste(local_folder, "/", this_file, sep=""),
                                     daily=grepl("export.CSV", this_file, fixed=TRUE),
                                     verbose=verbose)
-    if(!missing(filter)) new_data <- FilterGdeltDataframe(x=new_data,
-                                                          filter=filter,
-                                                          allow_wildcards=allow_wildcards,
-                                                          use_regex=use_regex,
-                                                          verbose=verbose)
+    if(!missing(row_filter) | !missing(...)) new_data <- FilterGdeltDataframe(x=new_data,
+                                                          verbose=verbose,
+                                                          row_filter=row_filter,
+                                                          ...=...)
     if(out_initialized) {
       out <- rbind(out, new_data)
     } else {
@@ -130,11 +134,10 @@ GetGDELT <- function(start_date,
     new_data <- GdeltZipToDataframe(f=paste(local_folder, "/", this_file, sep=""),
                                     daily=grepl("export.CSV", this_file, fixed=TRUE),
                                     verbose=verbose)
-    if(!missing(filter)) new_data <- FilterGdeltDataframe(x=new_data,
-                                                          filter=filter,
-                                                          allow_wildcards=allow_wildcards,
-                                                          use_regex=use_regex,
-                                                          verbose=verbose)
+    if(!missing(row_filter)) new_data <- FilterGdeltDataframe(x=new_data,
+                                                          verbose=verbose,
+                                                          row_filter=row_filter,
+                                                          ...=...)
     if(out_initialized) {
       out <- rbind(out, new_data)
     } else {

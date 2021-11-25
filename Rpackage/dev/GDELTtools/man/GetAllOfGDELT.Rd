@@ -28,7 +28,7 @@ Downloads all GDELT files not already present locally. ** This takes a long time
 GetAllOfGDELT("~/gdeltdata")} 
 }
 \references{
-GDELT: Global Data on Events, Location and Tone, 1979-2021.  
+GDELT: Global Data on Events, Location and Tone, 1979-2013.  
 Presented at the 2013 meeting of the International Studies Association
 in San Francisco, CA.
 \url{https://www.gdeltproject.org/}
