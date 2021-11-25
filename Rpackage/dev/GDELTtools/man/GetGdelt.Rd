@@ -7,18 +7,22 @@
 GetGDELT(
   start_date,
   end_date = start_date,
+  row_filter,
+  ...,
   local_folder = tempdir(),
   max_local_mb = Inf,
   data_url_root = "http://data.gdeltproject.org/events/",
-  verbose = TRUE,
-  row_filter = TRUE,
-  ...
+  verbose = TRUE
 )
 }
 \arguments{
 \item{start_date}{character, just about any human-readable form of the earliest date to include.}
 
 \item{end_date}{character, just about any human-readable form of the latest date to include.}
+
+\item{row_filter}{<data-masking> Row selection. Expressions that return a logical value, and are defined in terms of the variables in GDELT. If multiple expressions are included, they are combined with the & operator. Only rows for which all conditions evaluate to TRUE are kept.}
+
+\item{...}{<tidy-select>, Column selection. This takes the form of one or more unquoted expressions separated by commas. Variable names can be used as if they were positions in the data frame, so expressions like x:y can be used to select a range of variables.}
 
 \item{local_folder}{character, if specified, where downloaded files will be saved.}
 
@@ -27,10 +31,6 @@ GetGDELT(
 \item{data_url_root}{character, URL for the folder with GDELT data files.}
 
 \item{verbose}{logical, if TRUE then indications of progress will be displayed_}
-
-\item{row_filter}{<data-masking> Row selection. Expressions that return a logical value, and are defined in terms of the variables in GDELT. If multiple expressions are included, they are combined with the & operator. Only rows for which all conditions evaluate to TRUE are kept.}
-
-\item{...}{<tidy-select>, Column selection. This takes the form of one or more unquoted expressions separated by commas. Variable names can be used as if they were positions in the data frame, so expressions like x:y can be used to select a range of variables.}
 }
 \value{
 data.frame
@@ -63,21 +63,24 @@ which columns to return. It's well worth checking out the \code{\link[dplyr]{sel
 
 \examples{
 \dontrun{
-test_results <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
-  row_filter=ActionGeo_CountryCode="US")
+df1 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31")
 
-test_filter <- list(ActionGeo_ADM1Code=c("NI", "US"), ActionGeo_CountryCode="US")
-test_results <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31", 
-  filter=test_filter)
-table(test_results$ActionGeo_ADM1Code)
-table(test_results$ActionGeo_CountryCode)}
+df2 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
+                row_filter=ActionGeo_CountryCode=="US")
+
+df3 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
+                row_filter=Actor2Geo_CountryCode=="RS" & NumArticles==2 & is.na(Actor1CountryCode), 
+                1:5)
+
+df4 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
+                row_filter=Actor2Code=="COP" | Actor2Code=="MED", 
+                contains("date"), starts_with("actor"))
 
 # Specify a local folder to store the downloaded files
-\dontrun{
-test_results <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31", 
-                         filter=test_filter,
-                         local_folder="~/gdeltdata",
-                         max_local_mb=500)}
+df5 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
+                row_filter=ActionGeo_CountryCode=="US",
+                local_folder = "~/gdeltdata")
+}
 }
 \references{
 GDELT: Global Data on Events, Location and Tone, 1979-2013.  

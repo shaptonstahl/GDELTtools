@@ -46,31 +46,35 @@
 #' }
 #' @examples
 #' \dontrun{
-#' test_results <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
-#'   row_filter=ActionGeo_CountryCode="US")
+#' df1 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31")
 #' 
-#' test_filter <- list(ActionGeo_ADM1Code=c("NI", "US"), ActionGeo_CountryCode="US")
-#' test_results <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31", 
-#'   filter=test_filter)
-#' table(test_results$ActionGeo_ADM1Code)
-#' table(test_results$ActionGeo_CountryCode)}
+#' df2 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
+#'                 row_filter=ActionGeo_CountryCode=="US")
 #' 
+#' df3 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
+#'                 row_filter=Actor2Geo_CountryCode=="RS" & NumArticles==2 & is.na(Actor1CountryCode), 
+#'                 1:5)
+#' 
+#' df4 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
+#'                 row_filter=Actor2Code=="COP" | Actor2Code=="MED", 
+#'                 contains("date"), starts_with("actor"))
+#'
 #' # Specify a local folder to store the downloaded files
-#' \dontrun{
-#' test_results <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31", 
-#'                          filter=test_filter,
-#'                          local_folder="~/gdeltdata",
-#'                          max_local_mb=500)}
+#' df5 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
+#'                 row_filter=ActionGeo_CountryCode=="US",
+#'                 local_folder = "~/gdeltdata")
+#' }
 GetGDELT <- function(start_date,
                      end_date=start_date,
+                     row_filter,
+                     ...,
                      local_folder=tempdir(),
                      max_local_mb=Inf,
                      data_url_root="http://data.gdeltproject.org/events/",
-                     verbose=TRUE,
-                     row_filter=TRUE,
-                     ...) {
+                     verbose=TRUE) {
   
   # Coerce ending slashes as needed
+  
   local_folder <- StripTrailingSlashes(path.expand(local_folder))
   data_url_root <- paste(StripTrailingSlashes(data_url_root), "/", sep="")
   # create the local_folder if is doesn't exist
@@ -97,10 +101,10 @@ GetGDELT <- function(start_date,
     new_data <- GdeltZipToDataframe(f=paste(local_folder, "/", this_file, sep=""),
                                     daily=grepl("export.CSV", this_file, fixed=TRUE),
                                     verbose=verbose)
-    if(!missing(row_filter) | !missing(...)) new_data <- FilterGdeltDataframe(x=new_data,
-                                                          verbose=verbose,
-                                                          row_filter=row_filter,
-                                                          ...=...)
+    if(!missing(row_filter) | ...length() > 0) new_data <- FilterGdeltDataframe(x=new_data,
+                                                                                verbose=verbose,
+                                                                                row_filter={{row_filter}},
+                                                                                ...=...)
     if(out_initialized) {
       out <- rbind(out, new_data)
     } else {
@@ -134,10 +138,10 @@ GetGDELT <- function(start_date,
     new_data <- GdeltZipToDataframe(f=paste(local_folder, "/", this_file, sep=""),
                                     daily=grepl("export.CSV", this_file, fixed=TRUE),
                                     verbose=verbose)
-    if(!missing(row_filter)) new_data <- FilterGdeltDataframe(x=new_data,
-                                                          verbose=verbose,
-                                                          row_filter=row_filter,
-                                                          ...=...)
+    if(!missing(row_filter) | ...length() > 0) new_data <- FilterGdeltDataframe(x=new_data,
+                                                                                verbose=verbose,
+                                                                                row_filter={{row_filter}},
+                                                                                ...=...)
     if(out_initialized) {
       out <- rbind(out, new_data)
     } else {
