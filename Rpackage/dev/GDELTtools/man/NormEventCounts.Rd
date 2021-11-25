@@ -4,14 +4,14 @@
 \alias{NormEventCounts}
 \title{Scale event counts}
 \usage{
-NormEventCounts(x, unit.analysis, var.name = "norming_vars")
+NormEventCounts(x, unit_analysis, var_name = "norming_vars")
 }
 \arguments{
 \item{x}{data.frame, a GDELT data.frame.}
 
-\item{unit.analysis}{character, default is country.day; other options: country.day, country.month, country.year, day, month, year}
+\item{unit_analysis}{character, default is country_day; other options: country_month, country_year, day, month, year}
 
-\item{var.name}{character, base name for the new count variables}
+\item{var_name}{character, base name for the new count variables}
 }
 \value{
 data.frame
@@ -20,18 +20,18 @@ data.frame
 Scale event counts based on the unit of analysis.
 }
 \details{
-For \code{unit.analysis}, day and country-day put out a data set where date
+For \code{unit_analysis}, day and country-day put out a data set where date
 is of class \sQuote{date}.  All other options put out a data set where year
 or month is integer (this needs to be unified in a later version).
 }
 \examples{
 \dontrun{
-GDELT.subset.data <- GetGDELT("2013-06-01", "2013-06-07", allow.wildcards=TRUE,
-  filter=list(ActionGeo_CountryCode=c("AF", "US"), EventCode="14*"),
-  local.folder="~/gdeltdata")
-GDELT.normed.data <- NormEventCounts(x = GDELT.subset.data, 
-  unit.analysis="day", 
-  var.name="protest")}
+GDELT_subset_data <- GetGDELT("2013-06-01", "2013-06-07",
+  (ActionGeo_CountryCode=="AF" | ActionGeo_CountryCode=="US") & EventCode>=140 & EventCode<150,
+  local_folder="~/gdeltdata")
+GDELT_normed_data <- NormEventCounts(x = GDELT_subset_data, 
+  unit_analysis="day", 
+  var_name="protest")}
 }
 \references{
 GDELT: Global Data on Events, Location and Tone, 1979-2012.  

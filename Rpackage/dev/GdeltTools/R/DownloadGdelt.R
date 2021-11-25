@@ -35,7 +35,7 @@ DownloadGdelt <- function(f,
   if(!missing(max_local_mb)) {
     info_on_files <- FileInfo(local_folder)
     mb_currently_stored <- sum(info_on_files$size, na.rm=TRUE) / 2^20
-    #browser()
+
     while(mb_currently_stored > max_local_mb) {
       # delete file in folder accessed longest ago, BUT NOT CURRENT FILE
       info_on_files <- info_on_files[-which(dir(local_folder, include.dirs=FALSE)==f),]  # remove current file from consideration for deletion

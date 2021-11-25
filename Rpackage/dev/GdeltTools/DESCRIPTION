@@ -1,14 +1,14 @@
 Package: GDELTtools
 Type: Package
-Title: Download, Slice, and Normalize GDELT Data
-Version: 2.0
+Title: Download, Slice, and Normalize GDELT V1 Data
+Version: 1.5
 Date: 2021-11-28
 Author: Stephen R. Haptonstahl, Thomas Scherer, Timo Thoms, and Patrick Wheatley
 Maintainer: Stephen R. Haptonstahl <srh@haptonstahl.org>
-Description: The GDELT data set is over 60 GB now and growing 100 MB a month.
-    The number of source articles has increased over time and unevenly across
-    countries. This package makes it easy to download a subset of that data,
-    then normalize that data to facilitate valid time series analysis.
+Description: The GDELT V1 Event data set is over 37 GB now and growing 250 MB 
+    a month. The number of source articles has increased over time and unevenly 
+    across countries. This package makes it easy to download a subset of that 
+    data, then normalize that data to facilitate valid time series analysis.
 License: MIT + file LICENSE
 Depends:
     R (>= 4.0),
