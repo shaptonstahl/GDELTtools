@@ -1,8 +1,10 @@
 export(GetAllOfGDELT)
 export(GetGDELT)
 export(NormEventCounts)
+export(GetGDELTStability)
 importFrom("datetimeutils", "guess_datetime")   # used in GetGDELT
 importFrom("dplyr", "filter", "select")         # used in FilterGdeltDataframe
 importFrom("plyr", "laply", "ldply")            # used in FileInfo
 importFrom("utils", "download.file", "read.csv", "read.delim", "unzip", "packageVersion")
 importFrom("tools", "md5sum")                   # used in IsValidGDELT
+importFrom("stringr", "str_to_upper", "str_to_lower") # used in GetGDELTStability

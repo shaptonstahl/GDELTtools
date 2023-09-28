@@ -1,6 +1,6 @@
-#' Download all the GDELT files to a local folder
+#' Download all the GDELT V1 Event files to a local folder
 #'
-#' Downloads all GDELT files not already present locally. ** This takes a long time and a lot of space. **
+#' Downloads all GDELT V1 Event files not already present locally. ** This takes a long time and a lot of space. **
 #' 
 #' @aliases GetAllOfGDELT
 #' @param local_folder character, path to the file to be validated.

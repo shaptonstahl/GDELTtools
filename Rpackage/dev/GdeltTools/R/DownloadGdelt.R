@@ -1,6 +1,6 @@
-# Downloads a single file, then removes files if necessary to get under max_local_mb
-# Returns TRUE if file downloaded successfully, FALSE otherwise
-# DOES NOT GIVE A WARNING if non-gdelt files are in the local_folder
+# Downloads a single event data file, then removes files if necessary to get 
+# under max_local_mb. Returns TRUE if file downloaded successfully, FALSE 
+# otherwise. DOES NOT GIVE A WARNING if non-gdelt files are in the local_folder
 # Note: Using http instead of https because the certificate is expired
 # on the GDELT site.
 

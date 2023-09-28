@@ -1,8 +1,8 @@
 Package: GDELTtools
 Type: Package
-Title: Download, Slice, and Normalize GDELT V1 Data
-Version: 1.6
-Date: 2023-09-25
+Title: Download, Slice, and Normalize GDELT V1 Event and Sentiment API Data
+Version: 1.7
+Date: 2023-09-28
 Author: Stephen R. Haptonstahl, Thomas Scherer, Timo Thoms, and Patrick Wheatley
 Maintainer: Stephen R. Haptonstahl <srh@haptonstahl.org>
 Description: The GDELT V1 Event data set is over 41 GB now and growing 250 MB 
@@ -16,7 +16,8 @@ Depends:
 Imports:
     plyr,
     dplyr,
-    datetimeutils
+    datetimeutils,
+    stringr
 Suggests:
     testthat
 RoxygenNote: 7.2.3

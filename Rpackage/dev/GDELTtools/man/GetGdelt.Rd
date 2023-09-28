@@ -2,7 +2,7 @@
 % Please edit documentation in R/GetGDELT.R
 \name{GetGDELT}
 \alias{GetGDELT}
-\title{Download and subset GDELT data}
+\title{Download and subset GDELT V1 event data}
 \usage{
 GetGDELT(
   start_date,
@@ -36,7 +36,7 @@ GetGDELT(
 data.frame
 }
 \description{
-Download the GDELT files necessary for a data set, import them, filter on various criteria, and return a data.frame.
+Download the GDELT V1 Event files necessary for a data set, import them, filter on various criteria, and return a data.frame.
 }
 \details{
 Dates are parsed with \code{guess_datetime} in the datetimeutils package. 

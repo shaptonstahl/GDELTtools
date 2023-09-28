@@ -2,7 +2,7 @@
 % Please edit documentation in R/GetAllOfGDELT.R
 \name{GetAllOfGDELT}
 \alias{GetAllOfGDELT}
-\title{Download all the GDELT files to a local folder}
+\title{Download all the GDELT V1 Event files to a local folder}
 \usage{
 GetAllOfGDELT(
   local_folder,
@@ -21,7 +21,7 @@ GetAllOfGDELT(
 logical, TRUE if all files were downloaded successfully.
 }
 \description{
-Downloads all GDELT files not already present locally. ** This takes a long time and a lot of space. **
+Downloads all GDELT V1 Event files not already present locally. ** This takes a long time and a lot of space. **
 }
 \examples{
 \dontrun{

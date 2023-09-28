@@ -1,6 +1,6 @@
-#' Download and subset GDELT data
+#' Download and subset GDELT V1 event data
 #'
-#' Download the GDELT files necessary for a data set, import them, filter on various criteria, and return a data.frame. 
+#' Download the GDELT V1 Event files necessary for a data set, import them, filter on various criteria, and return a data.frame. 
 #' 
 #' @aliases GetGDELT
 #' @param start_date character, earliest date to include in "YYYY-MM-DD" format.
