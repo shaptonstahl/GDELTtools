@@ -215,3 +215,5 @@ pip-log.txt
 .mr.developer.cfg
 .Rhistory
 .Rhistory
+exp/20230927.gkgcounts.csv
+exp/20230927.gkg.csv
