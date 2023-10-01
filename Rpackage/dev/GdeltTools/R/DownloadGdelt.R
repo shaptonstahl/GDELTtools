@@ -12,45 +12,21 @@ DownloadGdelt <- function(f,
                           verbose=TRUE,
                           timeout=300) {
   
-  # Guardians
-  if(!missing(max_local_mb)) stopifnot(max_local_mb >= 0)
-
-  if(missing(local_folder)) stop("DownloadGDELT: local_folder must be specified")
-  # Coerce ending slashes as needed
   local_folder <- StripTrailingSlashes(path.expand(local_folder))
   data_url_root <- DataURLRoot(version=version, data_type=data_type)
   
   # Download the file
-  DownloadIfMissing(file_name=f, 
-                    url=paste(data_url_root, f, sep=""), 
-                    local_folder=local_folder,
-                    verbose=verbose,
-                    timeout=timeout)
+  download_result <- DownloadIfMissing(file_name=f, 
+                                       url=paste(data_url_root, f, sep=""), 
+                                       local_folder=local_folder,
+                                       verbose=verbose,
+                                       timeout=timeout)
+  if(!download_result) return(download_result) # no cleanup if file not present
   
   # Clean up if necessary
-  if(!missing(max_local_mb)) {
-    info_on_files <- FileInfo(local_folder)
-    mb_currently_stored <- sum(info_on_files$size, na.rm=TRUE) / 2^20
-
-    while(mb_currently_stored > max_local_mb) {
-      # delete file in folder accessed longest ago, BUT NOT CURRENT FILE
-      info_on_files <- info_on_files[-which(dir(local_folder, include.dirs=FALSE)==f),]  # remove current file from consideration for deletion
-      info_on_files <- info_on_files[info_on_files$size > 0,]  # remove size-zero files
-      if(0 == nrow(info_on_files)) {
-        # exit, because current file is the only file
-        mb_currently_stored <- 0
-      } else {
-        old_file_ids <- which(min(info_on_files$atime, na.rm=TRUE)==info_on_files$atime)
-        if(length(old_file_ids) < 1) stop("No local files to delete.")
-        else del_file_id <- old_file_ids[1]
-        
-        file.remove(paste(local_folder, "/", dir(local_folder, include.dirs=FALSE)[del_file_id], sep=""))
-        
-        # update
-        info_on_files <- FileInfo(local_folder)
-        mb_currently_stored <- sum(info_on_files$size, na.rm=TRUE) / 2^20
-      }
-    }
-  }
-  return(TRUE)
+  enforcement_result <- EnforceMaxDownloads(max_local_mb=max_local_mb,
+                                            local_folder=local_folder,
+                                            files_to_protect=f)
+  if(!enforcement_result) warning("DownloadGDELT: Unable to stay under max_local_mb")  
+  return(download_result)
 }

@@ -1,4 +1,4 @@
-test_that("Downloads and returns metadata", {
+test_that("Download and return metadata", {
   local_folder <- tempdir()
   
   v1_events    <- DataFileMetadata(version=1, data_type="events", local_folder=local_folder)
