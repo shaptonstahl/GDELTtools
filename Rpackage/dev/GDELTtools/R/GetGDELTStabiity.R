@@ -1,4 +1,8 @@
 #' Download data from the GDELT Stability Dashboard API to memory
+#' 
+#' The GDELT Stability Dashboard API makes daata available by day going back 180 days
+#' and by 15 minute period going back seven days. This function can access all of that
+#' data or a subset of it.
 #'
 #' @aliases GetGDELTStability
 #' @param location character, two-digit country code or four-digit ADM1 code (see below).
@@ -75,7 +79,7 @@ GetGDELTStability <- function(location,
                    "&SMOOTH=", smoothing,
                    "&NUMDAYS=", num_days,
                    sep="")
-  print(get_url)
+  
   result <- read.csv(file=get_url, colClasses=c("character", "numeric"))
   options(op)
   

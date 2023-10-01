@@ -3,24 +3,30 @@
 # Compares the MD5 hash of a downloaded file to the known hash provided
 # on the server.
 # 
-IsValidGDELT <- function(f,
-                         local_folder) {
+#
+# ex: IsValidGDELT("1979.zip", version=1, local_folder="~/gdeltdata", data_type="events")
+# ex: IsValidGDELT("20150218230000.export.CSV.zip", version=2, local_folder="~/gdeltdata", data_type="events")
+
+IsValidGDELT <- function(x,
+                         version,
+                         local_folder,
+                         data_type=c("events","gkg","gkgcounts","mentions"),
+                         timeout=300) {
   
-  md5_url <- "http://data.gdeltproject.org/events/md5sums"
+  if(missing(version) || (version==2 && missing(local_folder))) {
+    stop("IsValidGDELT: must specify version, and if V2 must specify local_folder")
+  }
   
-  md5_df <- tryCatch(read.delim(md5_url, sep=" ", header=FALSE, stringsAsFactors=FALSE), 
-                     error=function(e) stop(simpleError(paste("unable to read MD5 file at", md5_url), 
-                                                        "IsValidGDELT")))
-  
-  this_md5 <- md5_df[ md5_df[,ncol(md5_df)]==f ,1]
+  metadata <- DataFileMetadata(version=version, local_folder=local_folder, 
+                               data_type=data_type, timeout=timeout)
+  this_md5 <- metadata$md5[metadata$file_name==x]
   if(length(this_md5) != 1) {
-    warning("Unable to find MD5 for ", f)
+    warning("Unable to find MD5 for ", x)
     return(FALSE)
   }
   
-  observed_md5 <- tryCatch(md5sum(paste(StripTrailingSlashes(local_folder), "/", f, sep="")),
+  observed_md5 <- tryCatch(md5sum(paste(StripTrailingSlashes(local_folder), "/", x, sep="")),
                            error=function(e) stop(simpleError("unable to calculate MD5 for downloaded file",
                                                               "IsValidGDELT")))
-  
   return( observed_md5 == this_md5 )
 }

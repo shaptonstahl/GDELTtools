@@ -30,7 +30,9 @@ GetGDELTStability(
 data.frame
 }
 \description{
-Download data from the GDELT Stability Dashboard API to memory
+The GDELT Stability Dashboard API makes daata available by day going back 180 days
+and by 15 minute period going back seven days. This function can access all of that
+data or a subset of it.
 }
 \section{location}{
 

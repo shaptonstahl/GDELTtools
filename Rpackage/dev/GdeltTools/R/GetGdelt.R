@@ -93,7 +93,7 @@ GetGDELT <- function(start_date,
   
   # Ingest and filter local files
   for(this_file in LocalVersusRemote(filelist=source_files, local_folder=local_folder)$local) {
-    if(FALSE == IsValidGDELT(f=this_file, local_folder=local_folder)) {
+    if(FALSE == IsValidGDELT(x=this_file, local_folder=local_folder)) {
       # remove the offending file; it'll be downloaded in the later loop
       file.remove(paste(local_folder, "/", this_file, sep=""))
       next
@@ -123,14 +123,14 @@ GetGDELT <- function(start_date,
     if(FALSE == download_result) {
       stop("Unable to download file ", this_file, ". Please try again. If you get this result again, the file might not be available on the server.")
     }
-    if(FALSE == IsValidGDELT(f=this_file, local_folder=local_folder)) {
+    if(FALSE == IsValidGDELT(x=this_file, local_folder=local_folder)) {
       # try again
       download_result <- DownloadGdelt(f=this_file,
                                        local_folder=local_folder,
                                        max_local_mb=max_local_mb,
                                        data_url_root=data_url_root,
                                        verbose=verbose)
-      if(FALSE == IsValidGDELT(f=this_file, local_folder=local_folder)) {
+      if(FALSE == IsValidGDELT(x=this_file, local_folder=local_folder)) {
         stop("Unable to verify the integrity of ", this_file)
       }
     }

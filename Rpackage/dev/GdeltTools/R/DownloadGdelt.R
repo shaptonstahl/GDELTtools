@@ -21,15 +21,9 @@ DownloadGdelt <- function(f,
   data_url_root <- paste(StripTrailingSlashes(data_url_root), "/", sep="")
   
   # Download the file
-  op <- options()
-  options(HTTPUserAgent=paste("GDELTtools v", packageVersion("GDELTtools"),
-                              " in ", getOption("HTTPUserAgent"),
-                              sep=""))
-  result <- download.file(url=paste(data_url_root, f, sep=""),
-                          destfile=paste(local_folder, "/", f, sep=""),
-                          quiet=!verbose)
-  if(0 != result) return(FALSE)
-  options(op)
+  DownloadIfMissing(file_name=f, 
+                    url=paste(data_url_root, f, sep=""), 
+                    local_folder=local_folder)
   
   # Clean up if necessary
   if(!missing(max_local_mb)) {

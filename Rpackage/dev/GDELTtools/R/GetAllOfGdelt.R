@@ -54,7 +54,7 @@ GetAllOfGDELT <- function(local_folder,
     
     # validate if already downloaded
     if( this_file %in% LocalVersusRemote(filelist=source_files, local_folder=local_folder)$local ) {
-      if(FALSE == IsValidGDELT(f=this_file, local_folder=local_folder)) {
+      if(FALSE == IsValidGDELT(x=this_file, local_folder=local_folder)) {
         # remove the offending file; it'll be downloaded in the later if/then
         file.remove(paste(local_folder, "/", this_file, sep=""))
         Sys.sleep(1)
@@ -70,14 +70,14 @@ GetAllOfGDELT <- function(local_folder,
                                        data_url_root=data_url_root,
                                        verbose=TRUE)
       if(TRUE == download_result) {
-        if(FALSE == IsValidGDELT(f=this_file, local_folder=local_folder)) {
+        if(FALSE == IsValidGDELT(x=this_file, local_folder=local_folder)) {
           # try again
           download_result <- DownloadGdelt(f=this_file,
                                            local_folder=local_folder,
                                            max_local_mb=Inf,
                                            data_url_root=data_url_root,
                                            verbose=TRUE)
-          if(TRUE == IsValidGDELT(f=this_file, local_folder=local_folder)) {
+          if(TRUE == IsValidGDELT(x=this_file, local_folder=local_folder)) {
             this_res <- TRUE
           }
         } else {
