@@ -6,14 +6,23 @@
 \usage{
 GetAllOfGDELT(
   local_folder,
-  data_url_root = "http://data.gdeltproject.org/events/",
+  version,
+  data_type = c("events", "gkg", "gkgcounts", "mentions"),
+  verbose = TRUE,
+  timeout = 300,
   force = FALSE
 )
 }
 \arguments{
 \item{local_folder}{character, path to the file to be validated.}
 
-\item{data_url_root}{character, URL for the folder with GDELT data files.}
+\item{version}{numeric, specifying version 1 or 2 of the GDELT data.}
+
+\item{data_type}{character, One of events, gkg, gkgcounts, or mentions.}
+
+\item{verbose}{logical, if TRUE then messages will be displayed during the downloads.}
+
+\item{timeout}{integer, maximum number of seconds allowed for downloading each file.}
 
 \item{force}{logical, if TRUE then the download is carried out without further prompting the user.}
 }

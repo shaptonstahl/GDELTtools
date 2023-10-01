@@ -7,23 +7,25 @@
 DownloadGdelt <- function(f,
                           local_folder,
                           max_local_mb,
-                          data_url_root="http://data.gdeltproject.org/events/",
-                          verbose=TRUE) {
+                          version,
+                          data_type=c("events","gkg","gkgcounts","mentions"),
+                          verbose=TRUE,
+                          timeout=300) {
   
   # Guardians
   if(!missing(max_local_mb)) stopifnot(max_local_mb >= 0)
-  # Add guardian to ensure URLs end with a slash
-  # Add guardian to ensure local_folder does NOT end with a slash or backslash
-  
-  if(missing(local_folder)) local_folder <- tempdir()
+
+  if(missing(local_folder)) stop("DownloadGDELT: local_folder must be specified")
   # Coerce ending slashes as needed
   local_folder <- StripTrailingSlashes(path.expand(local_folder))
-  data_url_root <- paste(StripTrailingSlashes(data_url_root), "/", sep="")
+  data_url_root <- DataURLRoot(version=version, data_type=data_type)
   
   # Download the file
   DownloadIfMissing(file_name=f, 
                     url=paste(data_url_root, f, sep=""), 
-                    local_folder=local_folder)
+                    local_folder=local_folder,
+                    verbose=verbose,
+                    timeout=timeout)
   
   # Clean up if necessary
   if(!missing(max_local_mb)) {

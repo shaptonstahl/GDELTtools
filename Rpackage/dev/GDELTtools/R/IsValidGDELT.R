@@ -4,18 +4,14 @@
 # on the server.
 # 
 #
-# ex: IsValidGDELT("1979.zip", version=1, local_folder="~/gdeltdata", data_type="events")
-# ex: IsValidGDELT("20150218230000.export.CSV.zip", version=2, local_folder="~/gdeltdata", data_type="events")
+# ex: IsValidGDELT("1979.zip", local_folder="~/gdeltdata", version=1, data_type="events")
+# ex: IsValidGDELT("20150218230000.export.CSV.zip", local_folder="~/gdeltdata", version=2, data_type="events")
 
 IsValidGDELT <- function(x,
-                         version,
                          local_folder,
+                         version,
                          data_type=c("events","gkg","gkgcounts","mentions"),
                          timeout=300) {
-  
-  if(missing(version) || (version==2 && missing(local_folder))) {
-    stop("IsValidGDELT: must specify version, and if V2 must specify local_folder")
-  }
   
   metadata <- DataFileMetadata(version=version, local_folder=local_folder, 
                                data_type=data_type, timeout=timeout)

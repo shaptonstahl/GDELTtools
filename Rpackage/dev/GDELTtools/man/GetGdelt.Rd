@@ -9,9 +9,11 @@ GetGDELT(
   end_date = start_date,
   row_filter,
   ...,
-  local_folder = tempdir(),
+  local_folder,
   max_local_mb = Inf,
-  data_url_root = "http://data.gdeltproject.org/events/",
+  version,
+  data_type = c("events", "gkg", "gkgcounts", "mentions"),
+  timeout = 300,
   verbose = TRUE
 )
 }
@@ -24,13 +26,17 @@ GetGDELT(
 
 \item{...}{<tidy-select>, Column selection. This takes the form of one or more unquoted expressions separated by commas. Variable names can be used as if they were positions in the data frame, so expressions like x:y can be used to select a range of variables.}
 
-\item{local_folder}{character, if specified, where downloaded files will be saved.}
+\item{local_folder}{character, where downloaded files will be saved.}
 
 \item{max_local_mb}{numeric, the maximum size in MB of the downloaded files that will be retained.}
 
-\item{data_url_root}{character, URL for the folder with GDELT data files.}
+\item{version}{integer, URL for the folder with GDELT data files.}
 
-\item{verbose}{logical, if TRUE then indications of progress will be displayed_}
+\item{data_type}{character, one of events, gkg, gkgcounts, or mentions.}
+
+\item{timeout}{integer, maximum number of seconds allowed for downloading each file.}
+
+\item{verbose}{logical, if TRUE then indications of progress will be displayed.}
 }
 \value{
 data.frame
@@ -42,9 +48,8 @@ Download the GDELT V1 Event files necessary for a data set, import them, filter 
 Dates are parsed with \code{guess_datetime} in the datetimeutils package. 
 The recommended format is "YYYY-MM-DD".
 
-If \code{local_folder} is not specified then downloaded files are stored in
-\code{tempdir()}. If a needed file has already been downloaded to \code{local_folder}
-then this file is used instead of being downloaded. This can greatly speed up future
+If a needed file has already been downloaded to \code{local_folder} then this 
+file is used instead of being downloaded. This can greatly speed up future
 downloads.
 }
 \section{Filtering Results}{
@@ -57,29 +62,29 @@ the rows. It's well worth checking out the \code{\link[dplyr]{filter}} documenta
 \section{Selecting Columns}{
 
 
-The \code{...} is passed to \code{\link[dplyr]{select}}. This is a very flexible way to choose
-which columns to return. It's well worth checking out the \code{\link[dplyr]{select}} documentation.
+The \code{...} is passed to \code{dplyr::select}. This is a very flexible way to choose
+which columns to return. It's well worth checking out the \code{dplyr::select} documentation.
 }
 
 \examples{
 \dontrun{
-df1 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31")
+df1 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
+                "~/gdeltdata", version=1, data_type="events")
 
 df2 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
-                row_filter=ActionGeo_CountryCode=="US")
+                row_filter=ActionGeo_CountryCode=="US",
+                "~/gdeltdata", version=1, data_type="events")
 
 df3 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
                 row_filter=Actor2Geo_CountryCode=="RS" & NumArticles==2 & is.na(Actor1CountryCode), 
-                1:5)
+                1:5,
+                "~/gdeltdata", version=1, data_type="events")
 
 df4 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
                 row_filter=Actor2Code=="COP" | Actor2Code=="MED", 
-                contains("date"), starts_with("actor"))
+                contains("date"), starts_with("actor"),
+                "~/gdeltdata", version=1, data_type="events")
 
-# Specify a local folder to store the downloaded files
-df5 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
-                row_filter=ActionGeo_CountryCode=="US",
-                local_folder = "~/gdeltdata")
 }
 }
 \references{

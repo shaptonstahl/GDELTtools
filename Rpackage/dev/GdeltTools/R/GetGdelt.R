@@ -5,12 +5,14 @@
 #' @aliases GetGDELT
 #' @param start_date character, earliest date to include in "YYYY-MM-DD" format.
 #' @param end_date character, latest date to include in "YYYY-MM-DD" format.
-#' @param local_folder character, if specified, where downloaded files will be saved.
-#' @param max_local_mb numeric, the maximum size in MB of the downloaded files that will be retained.
-#' @param data_url_root character, URL for the folder with GDELT data files.
-#' @param verbose logical, if TRUE then indications of progress will be displayed_
 #' @param row_filter <data-masking> Row selection. Expressions that return a logical value, and are defined in terms of the variables in GDELT. If multiple expressions are included, they are combined with the & operator. Only rows for which all conditions evaluate to TRUE are kept.
 #' @param ... <tidy-select>, Column selection. This takes the form of one or more unquoted expressions separated by commas. Variable names can be used as if they were positions in the data frame, so expressions like x:y can be used to select a range of variables.
+#' @param local_folder character, where downloaded files will be saved.
+#' @param max_local_mb numeric, the maximum size in MB of the downloaded files that will be retained.
+#' @param version integer, URL for the folder with GDELT data files.
+#' @param data_type character, one of events, gkg, gkgcounts, or mentions.
+#' @param timeout integer, maximum number of seconds allowed for downloading each file.
+#' @param verbose logical, if TRUE then indications of progress will be displayed.
 #' @return data.frame
 #' @export
 #' @details
@@ -18,9 +20,8 @@
 #' Dates are parsed with \code{guess_datetime} in the datetimeutils package. 
 #' The recommended format is "YYYY-MM-DD".
 #'
-#' If \code{local_folder} is not specified then downloaded files are stored in
-#' \code{tempdir()}. If a needed file has already been downloaded to \code{local_folder}
-#' then this file is used instead of being downloaded. This can greatly speed up future
+#' If a needed file has already been downloaded to \code{local_folder} then this 
+#' file is used instead of being downloaded. This can greatly speed up future
 #' downloads.
 #' 
 #' @section Filtering Results:
@@ -30,8 +31,8 @@
 #' 
 #' @section Selecting Columns:
 #' 
-#' The \code{...} is passed to \code{\link[dplyr]{select}}. This is a very flexible way to choose
-#' which columns to return. It's well worth checking out the \code{\link[dplyr]{select}} documentation.
+#' The \code{...} is passed to \code{dplyr::select}. This is a very flexible way to choose
+#' which columns to return. It's well worth checking out the \code{dplyr::select} documentation.
 #' 
 #' @references
 #' GDELT: Global Data on Events, Location and Tone, 1979-2013.  
@@ -46,37 +47,39 @@
 #' }
 #' @examples
 #' \dontrun{
-#' df1 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31")
+#' df1 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
+#'                 "~/gdeltdata", version=1, data_type="events")
 #' 
 #' df2 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
-#'                 row_filter=ActionGeo_CountryCode=="US")
+#'                 row_filter=ActionGeo_CountryCode=="US",
+#'                 "~/gdeltdata", version=1, data_type="events")
 #' 
 #' df3 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
 #'                 row_filter=Actor2Geo_CountryCode=="RS" & NumArticles==2 & is.na(Actor1CountryCode), 
-#'                 1:5)
+#'                 1:5,
+#'                 "~/gdeltdata", version=1, data_type="events")
 #' 
 #' df4 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
 #'                 row_filter=Actor2Code=="COP" | Actor2Code=="MED", 
-#'                 contains("date"), starts_with("actor"))
+#'                 contains("date"), starts_with("actor"),
+#'                 "~/gdeltdata", version=1, data_type="events")
 #'
-#' # Specify a local folder to store the downloaded files
-#' df5 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
-#'                 row_filter=ActionGeo_CountryCode=="US",
-#'                 local_folder = "~/gdeltdata")
 #' }
 GetGDELT <- function(start_date,
                      end_date=start_date,
                      row_filter,
                      ...,
-                     local_folder=tempdir(),
+                     local_folder,
                      max_local_mb=Inf,
-                     data_url_root="http://data.gdeltproject.org/events/",
+                     version,
+                     data_type=c("events","gkg","gkgcounts","mentions"),
+                     timeout=300,
                      verbose=TRUE) {
   
   # Coerce ending slashes as needed
   
   local_folder <- StripTrailingSlashes(path.expand(local_folder))
-  data_url_root <- paste(StripTrailingSlashes(data_url_root), "/", sep="")
+  data_url_root <- DataURLRoot(version=version, data_type=data_type)
   # create the local_folder if is doesn't exist
   dir.create(local_folder, showWarnings=FALSE, recursive = TRUE)
   
@@ -117,20 +120,28 @@ GetGDELT <- function(start_date,
   for(this_file in LocalVersusRemote(filelist=source_files, local_folder=local_folder)$remote) {
     download_result <- DownloadGdelt(f=this_file,
                                      local_folder=local_folder,
-                                     max_local_mb=max_local_mb,
-                                     data_url_root=data_url_root,
-                                     verbose=verbose)
+                                     max_local_mb=Inf,
+                                     version=version,
+                                     data_type=data_type,
+                                     verbose=TRUE,
+                                     timeout=timeout)
     if(FALSE == download_result) {
       stop("Unable to download file ", this_file, ". Please try again. If you get this result again, the file might not be available on the server.")
     }
-    if(FALSE == IsValidGDELT(x=this_file, local_folder=local_folder)) {
+    if(FALSE == IsValidGDELT(x=this_file, local_folder=local_folder,
+                             version=version, data_type=data_type,
+                             timeout=timeout)) {
       # try again
       download_result <- DownloadGdelt(f=this_file,
                                        local_folder=local_folder,
-                                       max_local_mb=max_local_mb,
-                                       data_url_root=data_url_root,
-                                       verbose=verbose)
-      if(FALSE == IsValidGDELT(x=this_file, local_folder=local_folder)) {
+                                       max_local_mb=Inf,
+                                       version=version,
+                                       data_type=data_type,
+                                       verbose=TRUE,
+                                       timeout=timeout)
+      if(FALSE == IsValidGDELT(x=this_file, local_folder=local_folder,
+                               version=version, data_type=data_type,
+                               timeout=timeout)) {
         stop("Unable to verify the integrity of ", this_file)
       }
     }

@@ -2,16 +2,16 @@
 # 
 # Returns a tibble with columns: file_name, size_bytes, md5
 # 
-# ex: v1_events    <- DataFileMetadata(version=1, local_folder="~/gdeltdata", data_type="events")
-# ex: v1_gkg       <- DataFileMetadata(version=1, local_folder="~/gdeltdata", data_type="gkg")
-# ex: v1_gkgcounts <- DataFileMetadata(version=1, local_folder="~/gdeltdata", data_type="gkgcounts")
-# ex: v2_events    <- DataFileMetadata(version=2, local_folder="~/gdeltdata", data_type="events")
-# ex: v2_gkg       <- DataFileMetadata(version=2, local_folder="~/gdeltdata", data_type="gkg")
-# ex: v2_mentions  <- DataFileMetadata(version=2, local_folder="~/gdeltdata", data_type="mentions")
+# ex: v1_events    <- DataFileMetadata(version=1, data_type="events", local_folder="~/gdeltdata")
+# ex: v1_gkg       <- DataFileMetadata(version=1, data_type="gkg", local_folder="~/gdeltdata")
+# ex: v1_gkgcounts <- DataFileMetadata(version=1, data_type="gkgcounts", local_folder="~/gdeltdata")
+# ex: v2_events    <- DataFileMetadata(version=2, data_type="events", local_folder="~/gdeltdata")
+# ex: v2_gkg       <- DataFileMetadata(version=2, data_type="gkg", local_folder="~/gdeltdata")
+# ex: v2_mentions  <- DataFileMetadata(version=2, data_type="mentions", local_folder="~/gdeltdata")
 
 DataFileMetadata <- function(version,
-                             local_folder,
                              data_type=c("events","gkg","gkgcounts","mentions"),
+                             local_folder,
                              timeout=300) {
   if(missing(version)) stop("DataFileMetadata: must specify version")
   if(version==2 & missing(local_folder)) stop("ListAllGDELTFiles: for V2 must specify local_folder")
