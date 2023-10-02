@@ -13,7 +13,9 @@ EnforceMaxDownloads <- function(max_local_mb,
     ####  delete file in folder modified longest ago  ####
     
     # remove files_to_protect from consideration for deletion
-    info_on_files <- info_on_files[!(info_on_files$file_name %in% files_to_protect),]  
+    if(!missing(files_to_protect)) {
+      info_on_files <- info_on_files[!(info_on_files$file_name %in% files_to_protect),]  
+    }
     # remove size-zero files
     info_on_files <- info_on_files[info_on_files$size > 0,]  
     

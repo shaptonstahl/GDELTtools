@@ -26,8 +26,8 @@
 #' 
 #' @section Filtering Results:
 #' 
-#' The \code{row_filter} is passed to \code{\link[dplyr]{filter}}. This is a very flexible way to filter
-#' the rows. It's well worth checking out the \code{\link[dplyr]{filter}} documentation.
+#' The \code{row_filter} is passed to \code{dplyr::filter}. This is a very flexible way to filter
+#' the rows. It's well worth checking out the \code{dplyr::filter} documentation.
 #' 
 #' @section Selecting Columns:
 #' 
@@ -48,21 +48,21 @@
 #' @examples
 #' \dontrun{
 #' df1 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
-#'                 "~/gdeltdata", version=1, data_type="events")
+#'                 local_folder="~/gdeltdata", version=1, data_type="events")
 #' 
 #' df2 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
 #'                 row_filter=ActionGeo_CountryCode=="US",
-#'                 "~/gdeltdata", version=1, data_type="events")
+#'                 local_folder="~/gdeltdata", version=1, data_type="events")
 #' 
 #' df3 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
 #'                 row_filter=Actor2Geo_CountryCode=="RS" & NumArticles==2 & is.na(Actor1CountryCode), 
 #'                 1:5,
-#'                 "~/gdeltdata", version=1, data_type="events")
+#'                 local_folder="~/gdeltdata", version=1, data_type="events")
 #' 
 #' df4 <- GetGDELT(start_date="1979-01-01", end_date="1979-12-31",
 #'                 row_filter=Actor2Code=="COP" | Actor2Code=="MED", 
 #'                 contains("date"), starts_with("actor"),
-#'                 "~/gdeltdata", version=1, data_type="events")
+#'                 local_folder="~/gdeltdata", version=1, data_type="events")
 #'
 #' }
 GetGDELT <- function(start_date,
@@ -96,7 +96,9 @@ GetGDELT <- function(start_date,
   
   # Ingest and filter local files
   for(this_file in LocalVersusRemote(filelist=source_files, local_folder=local_folder)$local) {
-    if(FALSE == IsValidGDELT(x=this_file, local_folder=local_folder)) {
+    if(FALSE == IsValidGDELT(x=this_file, local_folder=local_folder,
+                             version=version, data_type=data_type,
+                             timeout=timeout)) {
       # remove the offending file; it'll be downloaded in the later loop
       file.remove(paste(local_folder, "/", this_file, sep=""))
       next
