@@ -20,7 +20,7 @@ DownloadIfMissing <- function(file_name,
                             quiet=!verbose,)
     if(0 != result) stop(paste("DataFileMetadata: error downloading", file_name))
     options(op)
-    return(result)
+    return(result==0)
   } else {
     # File already exists locally
     return(TRUE)
