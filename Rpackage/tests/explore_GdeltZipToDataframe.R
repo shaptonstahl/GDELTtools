@@ -11,6 +11,8 @@ source("~/GitHub/GDELTtools/Rpackage/dev/GDELTtools/R/LocalVersusRemote.R")
 source("~/GitHub/GDELTtools/Rpackage/dev/GDELTtools/R/DownloadIfMissing.R")
 source("~/GitHub/GDELTtools/Rpackage/dev/GDELTtools/R/ListAllGDELTFiles.R")
 source("~/GitHub/GDELTtools/Rpackage/dev/GDELTtools/R/DataFileMetadata.R")
+source("~/GitHub/GDELTtools/Rpackage/dev/GDELTtools/R/SubTable.R")
+source("~/GitHub/GDELTtools/Rpackage/dev/GDELTtools/R/SubList.R")
 
 path <- "~/gdeltdata"
 
@@ -20,6 +22,8 @@ gdelt_colClasses <- c(GLOBALEVENTID="integer", SQLDATE="integer", MonthYear="int
 cbind(gdelt_colNames, gdelt_colClasses)
 
 gdelt_year_col_types <- "iciincccccccccccccccccccclccciniiinicccnniicccnniicccnnic"
+nchar(gdelt_year_col_types)
+length(gdelt_colNames)
 
 v1_events_file_day <- "20201114.export.CSV.zip"
 v1_events_day <- read_delim(unz(paste(path, "/", v1_events_file_day, sep=""), 
@@ -84,8 +88,7 @@ v1_gkg <- cbind(v1_gkg, gkg_counts)
 v1_gkg <- select(v1_gkg, -c("COUNTS"))
 head(v1_gkg)
 
-v1_gkg$THEMES <- lapply(v1_gkg$THEMES, function(x) str_split(x, ";")[[1]])
-v1_gkg$THEMES <- lapply(v1_gkg$THEMES, function(x) x[-length(x)])
+v1_gkg$THEMES <- SubList(v1_gkg$THEMES)
 head(v1_gkg)
 
 which(sapply(v1_gkg$LOCATIONS,
@@ -93,30 +96,15 @@ which(sapply(v1_gkg$LOCATIONS,
                length(sapply(str_split(x, ";")[[1]], 
                              function(y) str_split(y, "#")[[1]]))
              }, USE.NAMES = FALSE) %% 7 > 0)
-v1_gkg$LOCATIONS <- lapply(v1_gkg$LOCATIONS, 
-                           function(x) {
-                             # q is a list of row vectors for the data.frame of locations
-                             # for this one row in the gkg dataset
-                             q <- lapply(str_split(x, ";")[[1]], function(y) str_split(y, "#")[[1]])
-                             # eliminate the few malformed rows, ones with more or less than
-                             # seven elements
-                             q <- q[sapply(q, length)==7]
-                             # if no rows are left, return NA instead of a data.frame
-                             if(length(q)==0) return(NA)
-                             else {
-                               # form the data.frame from the row vectors
-                               out_x <- ldply(q)
-                               # set the names for the data.frame
-                               names(out_x) <- c("GEO_TYPE","GEO_FULLNAME","GEO_COUNTRYCODE",
-                                                 "GEOADM1CODE","GEO_LAT","GEO_LONG","GEO_FEATUREID")
-                               return(out_x)
-                             }
-                           })
+v1_gkg$LOCATIONS <- SubTable(field=v1_gkg$LOCATIONS, 
+                              col_names=c("GEO_TYPE","GEO_FULLNAME","GEO_COUNTRYCODE",
+                                          "GEOADM1CODE","GEO_LAT","GEO_LONG","GEO_FEATUREID"),
+                              col_delim="#")
 head(v1_gkg)
 
-v1_gkg$PERSONS <- lapply(v1_gkg$PERSONS, function(x) str_split(x, ";")[[1]])
+v1_gkg$PERSONS <- SubList(v1_gkg$PERSONS)
 
-v1_gkg$ORGANIZATIONS <- lapply(v1_gkg$ORGANIZATIONS, function(x) str_split(x, ";")[[1]])
+v1_gkg$ORGANIZATIONS <- SubList(v1_gkg$ORGANIZATIONS)
 
 gkg_tone <- ldply(.data=v1_gkg$TONE, .fun=function(x) str_split(x, ",")[[1]])
 names(gkg_tone) <- paste("TONE_", c("TONE","POS_SCORE","NEG_SCORE","POLARITY",
@@ -127,11 +115,11 @@ v1_gkg <- cbind(v1_gkg, gkg_tone)
 v1_gkg <- select(v1_gkg, -c("TONE"))
 head(v1_gkg)
 
-v1_gkg$CAMEOEVENTIDS <- lapply(v1_gkg$CAMEOEVENTIDS, function(x) str_split(x, ",")[[1]])
+v1_gkg$CAMEOEVENTIDS <- SubList(v1_gkg$CAMEOEVENTIDS, row_delim="\\,")
 
-v1_gkg$SOURCES <- lapply(v1_gkg$SOURCES, function(x) str_split(x, ";")[[1]])
+v1_gkg$SOURCES <- SubList(v1_gkg$SOURCES)
 
-v1_gkg$SOURCEURLS <- str_split(v1_gkg$SOURCEURLS, "<UDIV>")
+v1_gkg$SOURCEURLS <- SubList(v1_gkg$SOURCEURLS, row_delim="<UDIV>")
 
 #################### v1 gkgcounts ####################
 v1_gkg_counts_files <- ListAllGDELTFiles(version=1, data_type="gkgcounts", local_folder="~/gdeltdata")
@@ -148,11 +136,11 @@ v1_gkgcounts <- read_delim(unz(paste(path, "/", v1_gkgcounts_file, sep=""),
 v1_gkgcounts$DATE <- as.Date(v1_gkgcounts$DATE, format="%Y%m%d")
 head(v1_gkgcounts)
 
-v1_gkgcounts$CAMEOEVENTIDS <- lapply(v1_gkgcounts$CAMEOEVENTIDS, function(x) str_split(x, ",")[[1]])
+v1_gkgcounts$CAMEOEVENTIDS <- SubList(v1_gkgcounts$CAMEOEVENTIDS, col_delim=",")
 
-v1_gkgcounts$SOURCES <- lapply(v1_gkgcounts$SOURCES, function(x) str_split(x, ";")[[1]])
+v1_gkgcounts$SOURCES <- SubList(v1_gkgcounts$SOURCES)
 
-v1_gkgcounts$SOURCEURLS <- str_split(v1_gkgcounts$SOURCEURLS, "<UDIV>")
+v1_gkgcounts$SOURCEURLS <- SubList(v1_gkgcounts$SOURCEURLS, col_delim="<UDIV>")
 
 head(v1_gkgcounts[11:15])
 
@@ -202,7 +190,7 @@ v2_gkg_file <- "20201114124500.gkg.csv.zip"
 v2_gkg_col_names <- c("GKGRECORDID","V2.1DATE","V2SOURCECOLLECTIONIDENTIFIER","V2SOURCECOMMONNAME",
                       "V2DOCUMENTIDENTIFIER","V1COUNTS","V2.1COUNTS","V1THEMES",
                       "V2ENHANCEDTHEMES","V1LOCATIONS","V2ENHANCEDLOCATIONS","V1PERSONS",
-                      "V2ENHANCEDPERSONS","V1ORGNIZATIONS","V2ENHANCEDORGNIZATIONS","V1.5TONE",
+                      "V2ENHANCEDPERSONS","V1ORGANIZATIONS","V2ENHANCEDORGANIZATIONS","V1.5TONE",
                       "V2.1ENHANCEDDATES","V2GCAM","V2.1SHARINGIMAGE","V2.1RELATEDIMAGES",
                       "V2.1SOCIALIMAGEEMBEDS","V2.1SOCIALVIDEOEMBEDS","V2.1QUOTATIONS",
                       "V2.1ALLNAMES","V2.1AMOUNTS","V2.1TRANSLATIONINFO","V2EXTRASXML")
@@ -247,71 +235,168 @@ v2_gkg <- select(v2_gkg, -c("V2.1COUNTS"))
 head(v2_gkg)
 
 ## V1THEMES
-v2_gkg$V1THEMES <- lapply(v2_gkg$V1THEMES, function(x) str_split(x, ";")[[1]])
-v2_gkg$V1THEMES <- lapply(v2_gkg$V1THEMES, function(x) x[-length(x)])
+v2_gkg$V1THEMES <- SubList(v2_gkg$V1THEMES)
 head(v2_gkg)
 
 ## V2ENHANCEDTHEMES
-v2_gkg$V2ENHANCEDTHEMES <- lapply(v2_gkg$V2ENHANCEDTHEMES, 
-                                  function(x) {
-                                    # q is a list of row vectors for the data.frame of enhanced 
-                                    # themes for this one row in the gkg dataset
-                                    q <- lapply(str_split(x, ";")[[1]], function(y) str_split(y, ",")[[1]])
-                                    # eliminate the few malformed rows, ones with more or less than
-                                    # two elements
-                                    q <- q[sapply(q, length)==2]
-                                    # if no rows are left, return NA instead of a data.frame
-                                    if(length(q)==0) return(NA)
-                                    else {
-                                      # form the data.frame from the row vectors
-                                      out_x <- ldply(q)
-                                      # set the names for the data.frame
-                                      names(out_x) <- c("THEME","OFFSET")
-                                      return(out_x)
-                                    }
-                                  })
+v2_gkg$V2ENHANCEDTHEMES <- SubTable(field=v2_gkg$V2ENHANCEDTHEMES, 
+                                     col_names=c("THEME","OFFSET"))
 
 ## V1LOCATIONS
-v2_gkg$V1LOCATIONS <- lapply(v2_gkg$V1LOCATIONS, 
-                             function(x) {
-                               # q is a list of row vectors for the data.frame of locations
-                               # for this one row in the gkg dataset
-                               q <- lapply(str_split(x, ";")[[1]], function(y) str_split(y, "#")[[1]])
-                               # eliminate the few malformed rows, ones with more or less than
-                               # seven elements
-                               q <- q[sapply(q, length)==7]
-                               # if no rows are left, return NA instead of a data.frame
-                               if(length(q)==0) return(NA)
-                               else {
-                                 # form the data.frame from the row vectors
-                                 out_x <- ldply(q)
-                                 # set the names for the data.frame
-                                 names(out_x) <- c("GEO_TYPE","GEO_FULLNAME","GEO_COUNTRYCODE",
-                                                   "GEOADM1CODE","GEO_LAT","GEO_LONG","GEO_FEATUREID")
-                                 return(out_x)
-                               }
-                             })
+v2_gkg$V1LOCATIONS <- SubTable(field=v2_gkg$V1LOCATIONS, 
+                                col_names=c("GEO_TYPE","GEO_FULLNAME","GEO_COUNTRYCODE",
+                                            "GEOADM1CODE","GEO_LAT","GEO_LONG","GEO_FEATUREID"),
+                                col_delim="#")
 
 ## V2ENHANCEDLOCATIONS
-v2_gkg$V2ENHANCEDLOCATIONS <- lapply(v2_gkg$V2ENHANCEDLOCATIONS, 
-                                     function(x) {
-                                       # q is a list of row vectors for the data.frame of locations
-                                       # for this one row in the gkg dataset
-                                       q <- lapply(str_split(x, ";")[[1]], function(y) str_split(y, "#")[[1]])
-                                       # eliminate the few malformed rows, ones with more or less than
-                                       # nine elements
-                                       q <- q[sapply(q, length)==9]
-                                       # if no rows are left, return NA instead of a data.frame
-                                       if(length(q)==0) return(NA)
-                                       else {
-                                         # form the data.frame from the row vectors
-                                         out_x <- ldply(q)
-                                         # set the names for the data.frame
-                                         names(out_x) <- c("GEO_TYPE","GEO_FULLNAME","GEO_COUNTRYCODE",
-                                                           "GEOADM1CODE","GEOADM2code","GEO_LAT",
-                                                           "GEO_LONG","GEO_FEATUREID","OFFSET")
-                                         return(out_x)
-                                       }
-                                     })
+v2_gkg$V2ENHANCEDLOCATIONS <- SubTable(field=v2_gkg$V2ENHANCEDLOCATIONS, 
+                                        col_names=c("GEO_TYPE","GEO_FULLNAME","GEO_COUNTRYCODE",
+                                                    "GEOADM1CODE","GEOADM2CODE","GEO_LAT",
+                                                    "GEO_LONG","GEO_FEATUREID","OFFSET"),
+                                        col_delim="#")
 
 ## V1PERSONS
+v2_gkg$V1PERSONS <- SubList(v2_gkg$V1PERSONS)
+
+## V2ENHANCEDPERSONS
+v2_gkg$V2ENHANCEDPERSONS <- SubTable(field=v2_gkg$V2ENHANCEDPERSONS, 
+                                      col_names=c("PERSON","OFFSET"))
+
+## V1ORGANIZATIONS
+v2_gkg$V1ORGANIZATIONS <- SubList(v2_gkg$V1ORGANIZATIONS)
+
+## V2ENHANCEDORGANIZATIONS
+v2_gkg$V2ENHANCEDORGANIZATIONS <- SubTable(field=v2_gkg$V2ENHANCEDORGANIZATIONS, 
+                                            col_names=c("ORGANIZATION","OFFSET"))
+
+## V1.5TONE
+v1.5_gkg_tone <- ldply(.data=v2_gkg$V1.5TONE, .fun=function(x) str_split(x, ",")[[1]])
+names(v1.5_gkg_tone) <- paste("V1.5TONE_", c("TONE","POS_SCORE","NEG_SCORE","POLARITY",
+                                             "ACTIVITY_REF_DENSITY","SELF_GROUP_REF_DENSITY",
+                                             "WORD_COUNT"),
+                         sep="")
+v2_gkg <- cbind(v2_gkg, v1.5_gkg_tone)
+v2_gkg <- select(v2_gkg, -c("V1.5TONE"))
+
+## V2.1ENHANCEDDATES
+v2_gkg$V2.1ENHANCEDDATES <- SubTable(field=v2_gkg$V2.1ENHANCEDDATES, 
+                                      col_names=c("DATE_RESOLUTION","MONTH","DAY",
+                                                  "YEAR","OFFSET"),
+                                      col_delim="#")
+
+## V2GCAM
+v2_gkg$V2GCAM <- SubTable(field=v2_gkg$V2GCAM, 
+                           col_names=c("DIMENSION","SCORE"),
+                           row_delim=",",
+                           col_delim=":")
+
+## V2.1RELATEDIMAGES
+v2_gkg$V2.1RELATEDIMAGES <- SubList(v2_gkg$V2.1RELATEDIMAGES)
+
+## V2.1SOCIALIMAGEEMBEDS
+v2_gkg$V2.1SOCIALIMAGEEMBEDS <- SubList(v2_gkg$V2.1SOCIALIMAGEEMBEDS)
+
+## V2.1SOCIALVIDEOEMBEDS
+v2_gkg$V2.1SOCIALVIDEOEMBEDS <- SubList(v2_gkg$V2.1SOCIALVIDEOEMBEDS)
+
+## V2.1QUOTATIONS
+v2_gkg$V2.1QUOTATIONS <- SubTable(field=v2_gkg$V2.1QUOTATIONS,
+                                   col_names=c("OFFSET","LENGTH","VERB","QUOTE"),
+                                   row_delim="#",
+                                   col_delim="\\|")
+
+## V2.1ALLNAMES
+v2_gkg$V2.1ALLNAMES <- SubTable(field=v2_gkg$V2.1ALLNAMES,
+                                col_names=c("NAME","OFFSET"))
+
+## V2.1AMOUNTS
+v2_gkg$V2.1AMOUNTS <- SubTable(field=v2_gkg$V2.1AMOUNTS,
+                                col_names=c("AMOUNT","OBJECT","OFFSET"))
+
+## V2.1TRANSLATIONINFO
+v2_gkg_TI <- ldply(str_split(v2_gkg$V2.1TRANSLATIONINFO, ";"), function(x) {
+  if(is.na(x[1])) return(c(NA,NA))
+  else {
+    v <- sapply(x, function(y) {
+      element <- str_split(y, ":")[[1]]
+      return(element[2])
+    })
+    return(v)
+  }
+})
+names(v2_gkg_TI) <- paste("V2.1TRANSLATIONINFO_", c("SRCLC","ENG"), sep="")
+v2_gkg <- cbind(v2_gkg, v2_gkg_TI)
+v2_gkg <- select(v2_gkg, -c("V2.1TRANSLATIONINFO"))
+
+## V2EXTRASXML
+
+################# v2 gkg translation ################
+v2_gkg_translation_file <- "20150218224500.translation.gkg.csv.zip"
+v2_gkg_translation <- read_delim(unz(paste(path, "/", v2_gkg_translation_file, sep=""), 
+                         unzip(paste(path, "/", v2_gkg_translation_file, sep=""), 
+                               list=TRUE)$Name[1]), 
+                     delim="\t", col_names=v2_gkg_col_names,
+                     col_types=v2_gkg_col_types)
+
+TI <- ldply(str_split(v2_gkg_translation$V2.1TRANSLATIONINFO, ";"), function(x) {
+  if(is.na(x[1])) return(c(NA,NA))
+  else {
+    v <- sapply(x, function(y) {
+      element <- str_split(y, ":")[[1]]
+      return(element[2])
+    })
+    return(v)
+  }
+})
+# Test for V2.1TRANSLATIONINFO
+ldply(str_split(c("a:b;c:d",NA, "e:f;g:h"), ";"), function(x) {
+  if(is.na(x[1])) return(c(NA,NA))
+  else {
+    v <- sapply(x, function(y) {
+      element <- str_split(y, ":")[[1]]
+      return(element[2])
+    })
+    return(v)
+  }
+})
+
+#################### v2 mentions ##################
+v2_mentions_files <- ListAllGDELTFiles(version=2, data_type="mentions", local_folder="~/gdeltdata")
+v2_mentions_file <- "20201114124500.mentions.CSV.zip"
+v2_mentions_col_names <- c("GlobalEventID","EventTimeDate","MentionTimeDate",
+                           "MentionType","MentionSourceName","MentionIdentifier",
+                           "SentenceID","Actor1CharOffset","Actor2CharOffset",
+                           "ActionCharOffset","InRawText","Confidence","MentionDocLen",
+                           "MentionDocTone","MentionDocTranslationInfo","Extras")
+v2_mentions_col_types <- c("cccicciiiilnincc")
+length(v2_mentions_col_names)
+nchar(v2_mentions_col_types)
+
+DownloadIfMissing(v2_mentions_file, 
+                  url=paste(DataURLRoot(version=2, data_type="mentions"), v2_mentions_file, sep=""), 
+                  local_folder=path) 
+v2_mentions <- read_delim(unz(paste(path, "/", v2_mentions_file, sep=""), 
+                              unzip(paste(path, "/", v2_mentions_file, sep=""), 
+                                    list=TRUE)$Name[1]), 
+                          delim="\t", col_names=v2_mentions_col_names,
+                          col_types=v2_mentions_col_types)
+## EventTimeDate and MentionTimeDate
+v2_mentions$EventTimeDate <- as.POSIXct(v2_mentions$EventTimeDate, format="%Y%m%d%H%M%S", tz="UTC")
+v2_mentions$MentionTimeDate <- as.POSIXct(v2_mentions$MentionTimeDate, format="%Y%m%d%H%M%S", tz="UTC")
+head(v2_mentions)
+
+## MentionDocTranslationInfo
+v2_mentions_TI <- ldply(str_split(v2_mentions$MentionDocTranslationInfo, ";"), function(x) {
+  if(is.na(x[1])) return(c(NA,NA))
+  else {
+    v <- sapply(x, function(y) {
+      element <- str_split(y, ":")[[1]]
+      return(element[2])
+    })
+    names(v) <- paste("MentionDocTranslationInfo_", c("SRCLC","ENG"), sep="")
+    return(v)
+  }
+})
+v2_mentions <- cbind(v2_mentions, v2_mentions_TI)
+v2_mentions <- select(v2_mentions, -c("MentionDocTranslationInfo"))
+head(v2_mentions[13:17])
