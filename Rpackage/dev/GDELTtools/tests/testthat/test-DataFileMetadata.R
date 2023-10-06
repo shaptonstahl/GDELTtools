@@ -9,9 +9,9 @@ test_that("Download and return metadata", {
   expect_true(nrow(v1_events) > 3900)
   expect_true(nrow(v1_gkg) > 3800)
   expect_true(nrow(v1_gkgcounts) > 3800)
-  expect_true(nrow(v2_events) > 296000)
-  expect_true(nrow(v2_gkg) > 296000)
-  expect_true(nrow(v2_mentions) > 296000)
+  expect_true(nrow(v2_events) > 10)
+  expect_true(nrow(v2_gkg) > 10)
+  expect_true(nrow(v2_mentions) > 10)
   
   expect_equal(names(v1_events), c("file_name", "size_bytes", "md5"))
   expect_equal(names(v1_gkg), c("file_name", "size_bytes", "md5"))

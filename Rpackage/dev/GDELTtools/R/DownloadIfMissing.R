@@ -15,18 +15,19 @@ DownloadIfMissing <- function(file_name,
                                                 local_folder=local_folder)$remote
   if(is_remote || (!is_remote & 
                    substr(file_name, 1, 1)=="v" &
-                   file.info(paste(local_folder, "/", file_name, sep=""))$atime < Sys.time() - 1)) {
+                   file.mtime(file.path(local_folder, file_name)) < Sys.time() - 24*60*60)) {
     op <- options()
     options(HTTPUserAgent=paste("GDELTtools v", packageVersion("GDELTtools"),
                                 " in ", getOption("HTTPUserAgent"),
                                 sep=""))
     options(timeout=timeout)
     result <- download.file(url=url,
-                            destfile=paste(local_folder, "/", file_name, sep=""),
-                            quiet=!verbose,)
-    if(0 != result) stop(paste("DataFileMetadata: error downloading", file_name))
+                            destfile=file.path(local_folder, file_name),
+                            quiet=!verbose)
+    cat("DataFileMetadata:", typeof(result), "\n")
+    if(!identical(as.integer(0), result)) stop(paste("DataFileMetadata: error downloading", file_name))
     options(op)
-    return(result==0)
+    return(identical(result,as.integer(0)))
   } else {
     # File already exists locally
     return(TRUE)

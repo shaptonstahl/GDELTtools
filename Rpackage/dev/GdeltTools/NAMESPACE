@@ -7,5 +7,5 @@ importFrom("dplyr", "filter", "select", "full_join","join_by")  # used in Filter
 importFrom("plyr", "laply", "ldply")                            # used in FileInfo
 importFrom("utils", "download.file", "read.csv", "read.delim", "unzip", "packageVersion")
 importFrom("tools", "md5sum")                                   # used in IsValidGDELT
-importFrom("stringr", "str_to_upper", "str_to_lower")           # used in GetGDELTStability
+importFrom("stringr", "str_to_upper", "str_to_lower", "str_split")
 importFrom("readr", "read_delim")                               # used in ListAllGDELTFiles

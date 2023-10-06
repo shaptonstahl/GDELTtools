@@ -6,7 +6,7 @@ test_that("imports and parses dataframes from ziped files", {
                                 url=paste(DataURLRoot(version=1, data_type="events"), 
                                           v1_events_year_fn, sep=""), 
                                 local_folder=path))
-  v1_events_year <- GdeltZipToDataframe(file_w_path=paste(path, "/", v1_events_year_fn, sep=""),
+  v1_events_year <- GdeltZipToDataframe(file_w_path=file.path(path, v1_events_year_fn),
                                         version=1, data_type="events", v1_daily=FALSE, verbose=FALSE)
   expect_equal(nrow(v1_events_year), 430941)  
   expect_equal(ncol(v1_events_year), 58)
@@ -18,8 +18,9 @@ test_that("imports and parses dataframes from ziped files", {
                                 url=paste(DataURLRoot(version=1, data_type="events"), 
                                           v1_events_day_fn, sep=""), 
                                 local_folder=path))
-  v1_events_day <- GdeltZipToDataframe(file_w_path=paste(path, "/", v1_events_day_fn, sep=""),
-                                       version=1, data_type="events", v1_daily=TRUE, verbose=FALSE)
+  v1_events_day <- GdeltZipToDataframe(file_w_path=file.path(path, v1_events_day_fn),
+                                       version=1, data_type="events", v1_daily=TRUE, 
+                                       verbose=FALSE)
   expect_equal(nrow(v1_events_day), 16508)  
   expect_equal(ncol(v1_events_day), 58)
   remove(v1_events_day)

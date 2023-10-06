@@ -10,17 +10,18 @@ GdeltZipToDataframe <- function(file_w_path,
   if(1==version) {
     if("events"==data_type) {
       gdelt_col_names <- c("GLOBALEVENTID", "SQLDATE", "MonthYear", "Year", "FractionDate", "Actor1Code", "Actor1Name", "Actor1CountryCode", "Actor1KnownGroupCode", "Actor1EthnicCode", "Actor1Religion1Code", "Actor1Religion2Code", "Actor1Type1Code", "Actor1Type2Code", "Actor1Type3Code", "Actor2Code", "Actor2Name", "Actor2CountryCode", "Actor2KnownGroupCode", "Actor2EthnicCode", "Actor2Religion1Code", "Actor2Religion2Code", "Actor2Type1Code", "Actor2Type2Code", "Actor2Type3Code", "IsRootEvent", "EventCode", "EventBaseCode", "EventRootCode", "QuadClass", "GoldsteinScale", "NumMentions", "NumSources", "NumArticles", "AvgTone", "Actor1Geo_Type", "Actor1Geo_FullName", "Actor1Geo_CountryCode", "Actor1Geo_ADM1Code", "Actor1Geo_Lat", "Actor1Geo_Long", "Actor1Geo_FeatureID", "Actor2Geo_Type", "Actor2Geo_FullName", "Actor2Geo_CountryCode", "Actor2Geo_ADM1Code", "Actor2Geo_Lat", "Actor2Geo_Long", "Actor2Geo_FeatureID", "ActionGeo_Type", "ActionGeo_FullName", "ActionGeo_CountryCode", "ActionGeo_ADM1Code", "ActionGeo_Lat", "ActionGeo_Long", "ActionGeo_FeatureID", "DATEADDED")
-      gdelt_year_col_types <- "iciincccccccccccccccccccclccciniiinicccnniicccnniicccnnic"
+      gdelt_year_col_types <- "iciincccccccccccccccccccclccciniiinicccnncicccnncicccnncc"
       
       if(v1_daily) {
         gdelt_col_names <- c(gdelt_col_names, "SOURCEURL")
         gdelt_year_col_types <- paste(gdelt_year_col_types, "c", sep="")
       }
       if(verbose) cat("Ingesting", file_w_path, "\n")
-      out <- read_delim(unz(file_w_path, unzip(file_w_path, list=TRUE)$Name[1]),
-                        col_names=gdelt_col_names, delim="\t",
-                        col_types = gdelt_year_col_types)
-      
+      suppressWarnings(
+        out <- read_delim(unz(file_w_path, unzip(file_w_path, list=TRUE)$Name[1]),
+                          col_names=gdelt_col_names, delim="\t",
+                          col_types = gdelt_year_col_types)
+      )
       if(!v1_daily) {
         out$SOURCEURL <- as.character(NA)
       }
@@ -28,8 +29,10 @@ GdeltZipToDataframe <- function(file_w_path,
       out$DATEADDED <- as.Date(out$DATEADDED, format="%Y%m%d")
     } else if("gkg"==data_type) {
       if(verbose) cat("Ingesting", file_w_path, "\n")
-      out <- read_delim(unz(file_w_path, unzip(file_w_path, list=TRUE)$Name[1]), 
-                           delim="\t", col_types="ciccccccccc")
+      suppressWarnings(
+        out <- read_delim(unz(file_w_path, unzip(file_w_path, list=TRUE)$Name[1]), 
+                          delim="\t", col_types="ciccccccccc")
+      )
       out$DATE <- as.Date(out$DATE, format="%Y%m%d")
 
       gkg_counts <- ldply(.data=lapply(out$COUNTS, function(x) str_split(str_split(x, ";")[[1]], "#")[[1]]), 
@@ -67,8 +70,10 @@ GdeltZipToDataframe <- function(file_w_path,
       
     } else if("gkgcounts"==data_type) {
       if(verbose) cat("Ingesting", file_w_path, "\n")
-      out <- read_delim(unz(file_w_path, unzip(file_w_path, list=TRUE)$Name[1]), 
-                                 delim="\t", col_types="cicncicccnncccc")
+      suppressWarnings(
+        out <- read_delim(unz(file_w_path, unzip(file_w_path, list=TRUE)$Name[1]), 
+                          delim="\t", col_types="cicncicccnncccc")
+      )
       out$DATE <- as.Date(out$DATE, format="%Y%m%d")
 
       out$CAMEOEVENTIDS <- SubList(out$CAMEOEVENTIDS, row_delim=",")
@@ -85,9 +90,11 @@ GdeltZipToDataframe <- function(file_w_path,
       gdelt_v2_event_col_names <- c("GlobalEventID", "Day", "MonthYear", "Year", "FractionDate", "Actor1Code", "Actor1Name", "Actor1CountryCode", "Actor1KnownGroupCode", "Actor1EthnicCode", "Actor1Religion1Code", "Actor1Religion2Code", "Actor1Type1Code", "Actor1Type2Code", "Actor1Type3Code", "Actor2Code", "Actor2Name", "Actor2CountryCode", "Actor2KnownGroupCode", "Actor2EthnicCode", "Actor2Religion1Code", "Actor2Religion2Code", "Actor2Type1Code", "Actor2Type2Code", "Actor2Type3Code", "IsRootEvent", "EventCode", "EventBaseCode", "EventRootCode", "QuadClass", "GoldsteinScale", "NumMentions", "NumSources", "NumArticles", "AvgTone", "Actor1Geo_Type", "Actor1Geo_FullName", "Actor1Geo_CountryCode", "Actor1Geo_ADM1Code", "Actor1Geo_ADM2Code", "Actor1Geo_Lat", "Actor1Geo_Long", "Actor1Geo_FeatureID", "Actor2Geo_Type", "Actor2Geo_FullName", "Actor2Geo_CountryCode", "Actor2Geo_ADM1Code", "Actor2Geo_ADM2Code", "Actor2Geo_Lat", "Actor2Geo_Long", "Actor2Geo_FeatureID", "ActionGeo_Type", "ActionGeo_FullName", "ActionGeo_CountryCode", "ActionGeo_ADM1Code", "ActionGeo_ADM2Code", "ActionGeo_Lat", "ActionGeo_Long", "ActionGeo_FeatureID", "DATEADDED", "SOURCEURL")
       
       if(verbose) cat("Ingesting", file_w_path, "\n")
-      out <- read_delim(unz(file_w_path, unzip(file_w_path, list=TRUE)$Name[1]), 
-                              delim="\t", col_names=gdelt_v2_event_col_names,
-                              col_types=gdelt_v2_event_col_types)
+      suppressWarnings(
+        out <- read_delim(unz(file_w_path, unzip(file_w_path, list=TRUE)$Name[1]), 
+                          delim="\t", col_names=gdelt_v2_event_col_names,
+                          col_types=gdelt_v2_event_col_types)
+      )
       out$Day <- as.Date(out$Day, format="%Y%m%d")
       out$DATEADDED <- as.POSIXct(out$DATEADDED, format="%Y%m%d%H%M%S", tz="UTC")
     } else if("gkg"==data_type) {
@@ -101,9 +108,11 @@ GdeltZipToDataframe <- function(file_w_path,
       v2_gkg_col_types <- c("ccicccccccccccccccccccccccc")
       
       if(verbose) cat("Ingesting", file_w_path, "\n")
-      out <- read_delim(unz(file_w_path, unzip(file_w_path, list=TRUE)$Name[1]), 
-                        delim="\t", col_names=v2_gkg_col_names,
-                        col_types=v2_gkg_col_types)
+      suppressWarnings(
+        out <- read_delim(unz(file_w_path, unzip(file_w_path, list=TRUE)$Name[1]), 
+                          delim="\t", col_names=v2_gkg_col_names,
+                          col_types=v2_gkg_col_types)
+      )
       ## V2.1DATE
       out$V2.1DATE <- as.Date(out$V2.1DATE, format="%Y%m%d")
       ## V1COUNTS
@@ -208,10 +217,12 @@ GdeltZipToDataframe <- function(file_w_path,
       v2_mentions_col_types <- c("cccicciiiilnincc")
       
       if(verbose) cat("Ingesting", file_w_path, "\n")
-      out <- read_delim(unz(file_w_path, unzip(file_w_path, list=TRUE)$Name[1]), 
-                        delim="\t", col_names=v2_mentions_col_names,
-                        col_types=v2_mentions_col_types)
-      
+      suppressWarnings(
+        out <- read_delim(unz(file_w_path, unzip(file_w_path, list=TRUE)$Name[1]), 
+                          delim="\t", col_names=v2_mentions_col_names,
+                          col_types=v2_mentions_col_types)
+        
+      )
       out$EventTimeDate <- as.POSIXct(out$EventTimeDate, format="%Y%m%d%H%M%S", tz="UTC")
       out$MentionTimeDate <- as.POSIXct(out$MentionTimeDate, format="%Y%m%d%H%M%S", tz="UTC")
       ## MentionDocTranslationInfo
