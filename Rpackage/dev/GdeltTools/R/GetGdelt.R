@@ -103,13 +103,15 @@ GetGDELT <- function(start_date,
       file.remove(paste(local_folder, "/", this_file, sep=""))
       next
     }
-    new_data <- GdeltZipToDataframe(f=paste(local_folder, "/", this_file, sep=""),
-                                    daily=grepl("export.CSV", this_file, fixed=TRUE),
+    new_data <- GdeltZipToDataframe(file_w_path=file.path(local_folder, this_file),
+                                    v1_daily=grepl("export.CSV", this_file, fixed=TRUE),
                                     verbose=verbose)
-    if(!missing(row_filter) | ...length() > 0) new_data <- FilterGdeltDataframe(x=new_data,
-                                                                                verbose=verbose,
-                                                                                row_filter={{row_filter}},
-                                                                                ...=...)
+    if(!missing(row_filter) | ...length() > 0) {
+      new_data <- FilterGdeltDataframe(x=new_data,
+                                       verbose=verbose,
+                                       row_filter={{row_filter}},
+                                       ...=...)
+    }
     if(out_initialized) {
       out <- rbind(out, new_data)
     } else {
@@ -148,13 +150,15 @@ GetGDELT <- function(start_date,
       }
     }
     
-    new_data <- GdeltZipToDataframe(f=paste(local_folder, "/", this_file, sep=""),
-                                    daily=grepl("export.CSV", this_file, fixed=TRUE),
+    new_data <- GdeltZipToDataframe(file_w_path=file.path(local_folder, this_file),
+                                    v1_daily=grepl("export.CSV", this_file, fixed=TRUE),
                                     verbose=verbose)
-    if(!missing(row_filter) | ...length() > 0) new_data <- FilterGdeltDataframe(x=new_data,
-                                                                                verbose=verbose,
-                                                                                row_filter={{row_filter}},
-                                                                                ...=...)
+    if(!missing(row_filter) | ...length() > 0) {
+      new_data <- FilterGdeltDataframe(x=new_data,
+                                       verbose=verbose,
+                                       row_filter={{row_filter}},
+                                       ...=...)
+    }
     if(out_initialized) {
       out <- rbind(out, new_data)
     } else {

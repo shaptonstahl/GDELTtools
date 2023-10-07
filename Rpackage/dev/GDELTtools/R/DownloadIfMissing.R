@@ -24,10 +24,15 @@ DownloadIfMissing <- function(file_name,
     result <- download.file(url=url,
                             destfile=file.path(local_folder, file_name),
                             quiet=!verbose)
-    cat("DataFileMetadata:", typeof(result), "\n")
-    if(!identical(as.integer(0), result)) stop(paste("DataFileMetadata: error downloading", file_name))
+    
     options(op)
-    return(identical(result,as.integer(0)))
+    
+    if(identical(as.integer(0), result)) {
+      return(TRUE)
+    } else {
+      if(verbose) cat("DataFileMetadata: error downloading", file_name)
+      return(FALSE)
+    }
   } else {
     # File already exists locally
     return(TRUE)
