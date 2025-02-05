@@ -22,6 +22,7 @@ GdeltZipToDataframe <- function(file_w_path,
                           col_names=gdelt_col_names, delim="\t",
                           col_types = gdelt_year_col_types)
       )
+      out$GDELTtools_key <- CreatePrimaryKey(out, salt=basename(file_w_path))
       if(!v1_daily) {
         out$SOURCEURL <- as.character(NA)
       }
@@ -33,6 +34,7 @@ GdeltZipToDataframe <- function(file_w_path,
         out <- read_delim(unz(file_w_path, unzip(file_w_path, list=TRUE)$Name[1]), 
                           delim="\t", col_types="ciccccccccc")
       )
+      out$GDELTtools_key <- CreatePrimaryKey(out, salt=basename(file_w_path))
       out$DATE <- as.Date(out$DATE, format="%Y%m%d")
 
       gkg_counts <- ldply(.data=lapply(out$COUNTS, function(x) str_split(str_split(x, ";")[[1]], "#")[[1]]), 
@@ -74,6 +76,7 @@ GdeltZipToDataframe <- function(file_w_path,
         out <- read_delim(unz(file_w_path, unzip(file_w_path, list=TRUE)$Name[1]), 
                           delim="\t", col_types="cicncicccnncccc")
       )
+      out$GDELTtools_key <- CreatePrimaryKey(out, salt=basename(file_w_path))
       out$DATE <- as.Date(out$DATE, format="%Y%m%d")
 
       out$CAMEOEVENTIDS <- SubList(out$CAMEOEVENTIDS, row_delim=",")
@@ -95,6 +98,7 @@ GdeltZipToDataframe <- function(file_w_path,
                           delim="\t", col_names=gdelt_v2_event_col_names,
                           col_types=gdelt_v2_event_col_types)
       )
+      out$GDELTtools_key <- CreatePrimaryKey(out, salt=basename(file_w_path))
       out$Day <- as.Date(out$Day, format="%Y%m%d")
       out$DATEADDED <- as.POSIXct(out$DATEADDED, format="%Y%m%d%H%M%S", tz="UTC")
     } else if("gkg"==data_type) {
@@ -113,6 +117,7 @@ GdeltZipToDataframe <- function(file_w_path,
                           delim="\t", col_names=v2_gkg_col_names,
                           col_types=v2_gkg_col_types)
       )
+      out$GDELTtools_key <- CreatePrimaryKey(out, salt=basename(file_w_path))
       ## V2.1DATE
       out$V2.1DATE <- as.Date(out$V2.1DATE, format="%Y%m%d")
       ## V1COUNTS
@@ -138,27 +143,42 @@ GdeltZipToDataframe <- function(file_w_path,
       ## V2ENHANCEDTHEMES
       out$V2ENHANCEDTHEMES <- SubTable(field=out$V2ENHANCEDTHEMES, 
                                           col_names=c("THEME","OFFSET"))
+                                       col_names=c("THEME","OFFSET"),
+                                       col_types="ci")
       ## V1LOCATIONS
       out$V1LOCATIONS <- SubTable(field=out$V1LOCATIONS, 
                                      col_names=c("GEO_TYPE","GEO_FULLNAME","GEO_COUNTRYCODE",
                                                  "GEOADM1CODE","GEO_LAT","GEO_LONG","GEO_FEATUREID"),
                                      col_delim="#")
+                                  col_names=c("GEO_TYPE","GEO_FULLNAME","GEO_COUNTRYCODE",
+                                              "GEOADM1CODE","GEO_LAT","GEO_LONG","GEO_FEATUREID"),
+                                  col_types="icccnnc",
+                                  col_delim="#")
       ## V2ENHANCEDLOCATIONS
       out$V2ENHANCEDLOCATIONS <- SubTable(field=out$V2ENHANCEDLOCATIONS, 
                                              col_names=c("GEO_TYPE","GEO_FULLNAME","GEO_COUNTRYCODE",
                                                          "GEOADM1CODE","GEOADM2CODE","GEO_LAT",
                                                          "GEO_LONG","GEO_FEATUREID","OFFSET"),
                                              col_delim="#")
+                                          col_names=c("GEO_TYPE","GEO_FULLNAME","GEO_COUNTRYCODE",
+                                                      "GEOADM1CODE","GEOADM2CODE","GEO_LAT",
+                                                      "GEO_LONG","GEO_FEATUREID","OFFSET"),
+                                          col_types="iccccnnci",
+                                          col_delim="#")
       ## V1PERSONS
       out$V1PERSONS <- SubList(out$V1PERSONS)
       ## V2ENHANCEDPERSONS
       out$V2ENHANCEDPERSONS <- SubTable(field=out$V2ENHANCEDPERSONS, 
                                            col_names=c("PERSON","OFFSET"))
+                                        col_names=c("PERSON","OFFSET"),
+                                        col_types="ci")
       ## V1ORGANIZATIONS
       out$V1ORGANIZATIONS <- SubList(out$V1ORGANIZATIONS)
       ## V2ENHANCEDORGANIZATIONS
       out$V2ENHANCEDORGANIZATIONS <- SubTable(field=out$V2ENHANCEDORGANIZATIONS, 
                                                  col_names=c("ORGANIZATION","OFFSET"))
+                                              col_names=c("ORGANIZATION","OFFSET"),
+                                              col_types="ci")
       ## V1.5TONE
       v1.5_gkg_tone <- ldply(.data=out$V1.5TONE, .fun=function(x) str_split(x, ",")[[1]])
       names(v1.5_gkg_tone) <- paste("V1.5TONE_", c("TONE","POS_SCORE","NEG_SCORE","POLARITY",
@@ -172,11 +192,19 @@ GdeltZipToDataframe <- function(file_w_path,
                                            col_names=c("DATE_RESOLUTION","MONTH","DAY",
                                                        "YEAR","OFFSET"),
                                            col_delim="#")
+                                        col_names=c("DATE_RESOLUTION","MONTH","DAY",
+                                                    "YEAR","OFFSET"),
+                                        col_types="iiiii",
+                                        col_delim="#")
       ## V2GCAM
       out$V2GCAM <- SubTable(field=out$V2GCAM, 
                                 col_names=c("DIMENSION","SCORE"),
                                 row_delim=",",
                                 col_delim=":")
+                             col_names=c("DIMENSION","SCORE"),
+                             col_types="cn",
+                             row_delim=",",
+                             col_delim=":")
       ## V2.1RELATEDIMAGES
       out$V2.1RELATEDIMAGES <- SubList(out$V2.1RELATEDIMAGES)
       ## V2.1SOCIALIMAGEEMBEDS
@@ -188,12 +216,20 @@ GdeltZipToDataframe <- function(file_w_path,
                                         col_names=c("OFFSET","LENGTH","VERB","QUOTE"),
                                         row_delim="#",
                                         col_delim="\\|")
+                                     col_names=c("OFFSET","LENGTH","VERB","QUOTE"),
+                                     col_types="iicc",
+                                     row_delim="#",
+                                     col_delim="\\|")
       ## V2.1ALLNAMES
       out$V2.1ALLNAMES <- SubTable(field=out$V2.1ALLNAMES,
                                       col_names=c("NAME","OFFSET"))
+                                   col_names=c("NAME","OFFSET"),
+                                   col_types="ci")
       ## V2.1AMOUNTS
       out$V2.1AMOUNTS <- SubTable(field=out$V2.1AMOUNTS,
                                      col_names=c("AMOUNT","OBJECT","OFFSET"))
+                                  col_names=c("AMOUNT","OBJECT","OFFSET"),
+                                  col_types="nci")
       ## V2.1TRANSLATIONINFO
       v2_gkg_TI <- ldply(str_split(out$V2.1TRANSLATIONINFO, ";"), function(x) {
         if(is.na(x[1])) return(c(NA,NA))
@@ -223,6 +259,7 @@ GdeltZipToDataframe <- function(file_w_path,
                           col_types=v2_mentions_col_types)
         
       )
+      out$GDELTtools_key <- CreatePrimaryKey(out, salt=basename(file_w_path))
       out$EventTimeDate <- as.POSIXct(out$EventTimeDate, format="%Y%m%d%H%M%S", tz="UTC")
       out$MentionTimeDate <- as.POSIXct(out$MentionTimeDate, format="%Y%m%d%H%M%S", tz="UTC")
       ## MentionDocTranslationInfo

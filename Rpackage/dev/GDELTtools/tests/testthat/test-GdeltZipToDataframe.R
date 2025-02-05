@@ -1,4 +1,5 @@
 test_that("imports and parses dataframes from ziped files", {
+test_that("imports and parses dataframes from zipped files", {
   
   # v1 events - year file
   v1_events_year_fn <- "1979.zip"
@@ -12,6 +13,7 @@ test_that("imports and parses dataframes from ziped files", {
                                         verbose=FALSE)
   expect_equal(nrow(v1_events_year), 430941)  
   expect_equal(ncol(v1_events_year), 58)
+  expect_equal(ncol(v1_events_year), 59)
   remove(v1_events_year)
   
   # v1 events - day file
@@ -26,6 +28,7 @@ test_that("imports and parses dataframes from ziped files", {
                                        verbose=FALSE)
   expect_equal(nrow(v1_events_day), 16508)  
   expect_equal(ncol(v1_events_day), 58)
+  expect_equal(ncol(v1_events_day), 59)
   remove(v1_events_day)
   
   # v1 gkg
@@ -39,6 +42,7 @@ test_that("imports and parses dataframes from ziped files", {
                                 version=1, data_type="gkg", v1_daily=FALSE, verbose=FALSE)
   expect_equal(nrow(v1_gkg), 6137)  
   expect_equal(ncol(v1_gkg), 25)
+  expect_equal(ncol(v1_gkg), 26)
   remove(v1_gkg)
   
   # v1 gkgcounts
@@ -53,6 +57,7 @@ test_that("imports and parses dataframes from ziped files", {
                                       verbose=FALSE)
   expect_equal(nrow(v1_gkgcounts), 3522)  
   expect_equal(ncol(v1_gkgcounts), 15)
+  expect_equal(ncol(v1_gkgcounts), 16)
   remove(v1_gkgcounts)
   
   # v2 events
@@ -66,6 +71,7 @@ test_that("imports and parses dataframes from ziped files", {
                                    version=2, data_type="events", v1_daily=FALSE, verbose=FALSE)
   expect_equal(nrow(v2_events), 2248)  
   expect_equal(ncol(v2_events), 61)
+  expect_equal(ncol(v2_events), 62)
   remove(v2_events)
   
   # v2 gkg
@@ -79,6 +85,7 @@ test_that("imports and parses dataframes from ziped files", {
                                 version=2, data_type="gkg", v1_daily=FALSE, verbose=FALSE)
   expect_equal(nrow(v2_gkg), 1198)  
   expect_equal(ncol(v2_gkg), 53)
+  expect_equal(ncol(v2_gkg), 54)
   remove(v2_gkg)
   
   # v2 mentions
@@ -92,5 +99,6 @@ test_that("imports and parses dataframes from ziped files", {
                                 version=2, data_type="mentions", v1_daily=FALSE, verbose=FALSE)
   expect_equal(nrow(v2_mentions), 4330)  
   expect_equal(ncol(v2_mentions), 17)
+  expect_equal(ncol(v2_mentions), 18)
   remove(v2_mentions)
 })

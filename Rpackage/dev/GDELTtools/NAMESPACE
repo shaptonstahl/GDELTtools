@@ -8,4 +8,7 @@ importFrom("plyr", "laply", "ldply")                            # used in FileIn
 importFrom("utils", "download.file", "read.csv", "read.delim", "unzip", "packageVersion")
 importFrom("tools", "md5sum")                                   # used in IsValidGDELT
 importFrom("stringr", "str_to_upper", "str_to_lower", "str_split")
+importFrom("readr", "read_delim")                               # used in ListAllGDELTFilesimportFrom("stringr", "str_to_upper", "str_to_lower", "str_split", "str_split_1")
 importFrom("readr", "read_delim")                               # used in ListAllGDELTFiles
+importFrom("hablar",
+           "convert","num","chr","lgl","int","dbl","fct","dtm","dte")
