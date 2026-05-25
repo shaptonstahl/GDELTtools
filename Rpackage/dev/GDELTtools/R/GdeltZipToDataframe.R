@@ -51,6 +51,8 @@ GdeltZipToDataframe <- function(file_w_path,
       out$LOCATIONS <- SubTable(field=out$LOCATIONS, 
                                 col_names=c("GEO_TYPE","GEO_FULLNAME","GEO_COUNTRYCODE",
                                             "GEOADM1CODE","GEO_LAT","GEO_LONG","GEO_FEATUREID"),
+                                col_types="icccnnc",
+                                #skip="c",
                                 col_delim="#")
 
       out$PERSONS <- SubList(out$PERSONS)
@@ -142,24 +144,16 @@ GdeltZipToDataframe <- function(file_w_path,
       out$V1THEMES <- SubList(out$V1THEMES)
       ## V2ENHANCEDTHEMES
       out$V2ENHANCEDTHEMES <- SubTable(field=out$V2ENHANCEDTHEMES, 
-                                          col_names=c("THEME","OFFSET"))
                                        col_names=c("THEME","OFFSET"),
                                        col_types="ci")
       ## V1LOCATIONS
       out$V1LOCATIONS <- SubTable(field=out$V1LOCATIONS, 
-                                     col_names=c("GEO_TYPE","GEO_FULLNAME","GEO_COUNTRYCODE",
-                                                 "GEOADM1CODE","GEO_LAT","GEO_LONG","GEO_FEATUREID"),
-                                     col_delim="#")
                                   col_names=c("GEO_TYPE","GEO_FULLNAME","GEO_COUNTRYCODE",
                                               "GEOADM1CODE","GEO_LAT","GEO_LONG","GEO_FEATUREID"),
                                   col_types="icccnnc",
                                   col_delim="#")
       ## V2ENHANCEDLOCATIONS
       out$V2ENHANCEDLOCATIONS <- SubTable(field=out$V2ENHANCEDLOCATIONS, 
-                                             col_names=c("GEO_TYPE","GEO_FULLNAME","GEO_COUNTRYCODE",
-                                                         "GEOADM1CODE","GEOADM2CODE","GEO_LAT",
-                                                         "GEO_LONG","GEO_FEATUREID","OFFSET"),
-                                             col_delim="#")
                                           col_names=c("GEO_TYPE","GEO_FULLNAME","GEO_COUNTRYCODE",
                                                       "GEOADM1CODE","GEOADM2CODE","GEO_LAT",
                                                       "GEO_LONG","GEO_FEATUREID","OFFSET"),
@@ -169,14 +163,12 @@ GdeltZipToDataframe <- function(file_w_path,
       out$V1PERSONS <- SubList(out$V1PERSONS)
       ## V2ENHANCEDPERSONS
       out$V2ENHANCEDPERSONS <- SubTable(field=out$V2ENHANCEDPERSONS, 
-                                           col_names=c("PERSON","OFFSET"))
                                         col_names=c("PERSON","OFFSET"),
                                         col_types="ci")
       ## V1ORGANIZATIONS
       out$V1ORGANIZATIONS <- SubList(out$V1ORGANIZATIONS)
       ## V2ENHANCEDORGANIZATIONS
       out$V2ENHANCEDORGANIZATIONS <- SubTable(field=out$V2ENHANCEDORGANIZATIONS, 
-                                                 col_names=c("ORGANIZATION","OFFSET"))
                                               col_names=c("ORGANIZATION","OFFSET"),
                                               col_types="ci")
       ## V1.5TONE
@@ -189,18 +181,12 @@ GdeltZipToDataframe <- function(file_w_path,
       out <- select(out, -c("V1.5TONE"))
       ## V2.1ENHANCEDDATES
       out$V2.1ENHANCEDDATES <- SubTable(field=out$V2.1ENHANCEDDATES, 
-                                           col_names=c("DATE_RESOLUTION","MONTH","DAY",
-                                                       "YEAR","OFFSET"),
-                                           col_delim="#")
                                         col_names=c("DATE_RESOLUTION","MONTH","DAY",
                                                     "YEAR","OFFSET"),
                                         col_types="iiiii",
                                         col_delim="#")
       ## V2GCAM
       out$V2GCAM <- SubTable(field=out$V2GCAM, 
-                                col_names=c("DIMENSION","SCORE"),
-                                row_delim=",",
-                                col_delim=":")
                              col_names=c("DIMENSION","SCORE"),
                              col_types="cn",
                              row_delim=",",
@@ -213,21 +199,16 @@ GdeltZipToDataframe <- function(file_w_path,
       out$V2.1SOCIALVIDEOEMBEDS <- SubList(out$V2.1SOCIALVIDEOEMBEDS)
       ## V2.1QUOTATIONS
       out$V2.1QUOTATIONS <- SubTable(field=out$V2.1QUOTATIONS,
-                                        col_names=c("OFFSET","LENGTH","VERB","QUOTE"),
-                                        row_delim="#",
-                                        col_delim="\\|")
                                      col_names=c("OFFSET","LENGTH","VERB","QUOTE"),
                                      col_types="iicc",
                                      row_delim="#",
                                      col_delim="\\|")
       ## V2.1ALLNAMES
       out$V2.1ALLNAMES <- SubTable(field=out$V2.1ALLNAMES,
-                                      col_names=c("NAME","OFFSET"))
                                    col_names=c("NAME","OFFSET"),
                                    col_types="ci")
       ## V2.1AMOUNTS
       out$V2.1AMOUNTS <- SubTable(field=out$V2.1AMOUNTS,
-                                     col_names=c("AMOUNT","OBJECT","OFFSET"))
                                   col_names=c("AMOUNT","OBJECT","OFFSET"),
                                   col_types="nci")
       ## V2.1TRANSLATIONINFO
